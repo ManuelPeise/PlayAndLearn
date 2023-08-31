@@ -4,8 +4,23 @@ using BusinessLogic.Shared.Interfaces;
 using Data.AppData;
 using Microsoft.EntityFrameworkCore;
 using Shared.Models.Entities;
+using System.Runtime.CompilerServices;
+
+var corsPolicy = "CorsPolicy";
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddCors(opt =>
+{
+    opt.AddPolicy(
+        name: corsPolicy,
+        p =>
+    {
+        p.AllowAnyHeader();
+        p.AllowAnyMethod();
+        p.AllowAnyOrigin();
+    });
+});
 
 // Add services to the container.
 
@@ -25,6 +40,8 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 var app = builder.Build();
+
+app.UseCors(corsPolicy);
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
