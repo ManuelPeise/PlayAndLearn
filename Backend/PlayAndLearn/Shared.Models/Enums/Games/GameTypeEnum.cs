@@ -1,4 +1,4 @@
-﻿namespace Shared.Games.Enums
+﻿namespace Shared.Models.Enums.Games
 {
     public enum GameTypeEnum
     {
