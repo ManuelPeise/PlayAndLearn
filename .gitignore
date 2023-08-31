@@ -23,6 +23,8 @@
 [Aa]ssets/[Tt]hirdParty.meta
 [Aa]ssets/[Pp]lugins*
 [Aa]ssets/[Aa]sset[Ss]tore[Tt]ools*
+[Aa]ppsettings.json
+[Aa]ppsettings.Development.json
 /.vs/
 .vscode/
 *.bak
