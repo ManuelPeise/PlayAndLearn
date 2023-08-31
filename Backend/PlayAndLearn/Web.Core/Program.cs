@@ -1,8 +1,9 @@
+using BusinessLogic.Games;
 using BusinessLogic.Shared;
 using BusinessLogic.Shared.Interfaces;
 using Data.AppData;
 using Microsoft.EntityFrameworkCore;
-using Shared.DbContext.Entities;
+using Shared.Models.Entities;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -15,13 +16,13 @@ builder.Services.AddDbContext<AppDataContext>(options =>
     options.UseMySQL(connection);
 });
 
+// builder.Services.AddScoped<IGenericDbContextAccessor<EntityBase>, GenericDbContextAccessor<EntityBase>>();
+builder.Services.AddScoped<IGameHandlerFactory, GameHandlerFactory>();
+
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-
-builder.Services.AddScoped<IGenericDbContextAccessor<EntityBase>, GenericDbContextAccessor<EntityBase>>();
-builder.Services.AddScoped<IGameFactory, GameFactory>();
 
 var app = builder.Build();
 

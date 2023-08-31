@@ -2,6 +2,7 @@
 
 namespace Services.Shared
 {
+    [ApiController]
     [Route("[controller]/[action]")]
     public class ApiControllerBase : ControllerBase
     {

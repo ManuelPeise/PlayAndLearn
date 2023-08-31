@@ -1,10 +1,9 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace Shared.DbContext.Interfaces
+namespace Shared.Models.Interfaces
 {
     public interface IEntity
     {
-        [Key]
-        public Guid Id { get; set; }
+        public int Id { get; set; }
     }
 }
