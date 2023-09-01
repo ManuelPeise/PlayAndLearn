@@ -6,6 +6,7 @@ import { getGameConfiguration } from "../../_lib/_utils/GameConfigurationHandler
 import { useGameSettingsValidation } from "../../_hooks/useGameSettingsValidation";
 import { IGameSettings } from "../../_lib/_intefaces/IGameSettings";
 import Loadingindicator from "../../_components/_loading/LoadingIndicator";
+import MemoryGameContainer from "./MemoryGameContainer";
 
 const MemoryPage: React.FC = () => {
   const configuration = getGameConfiguration(GameTypeEnum.Memory);
@@ -15,6 +16,7 @@ const MemoryPage: React.FC = () => {
     topic: configuration.defaultTopic,
     level: configuration.defaultLevel,
     pairs: configuration.defaultFilePairCount,
+    isRunning: false,
   });
 
   const validator = useGameSettingsValidation();
@@ -41,6 +43,12 @@ const MemoryPage: React.FC = () => {
         marginTop={2}
         handleIsLoadingChanged={handleIsloadingChanged}
         handleSettingsChanged={handleSettingsChanged}
+      />
+      <MemoryGameContainer
+        settings={settings}
+        isLoading={isLoading}
+        handleSettingsChanged={handleSettingsChanged}
+        handleIsloadingChanged={handleIsloadingChanged}
       />
     </Grid>
   );

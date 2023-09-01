@@ -5,4 +5,5 @@ export interface IGameSettings {
   topic?: GameTopicTypeEnum;
   level?: GameLevelTypeEnum;
   pairs: number;
+  isRunning: boolean;
 }
