@@ -2,6 +2,7 @@
 
 using Data.AppData;
 using Shared.Games.Models;
+using Shared.Models.Enums.Games;
 
 namespace BusinessLogic.Shared
 {
@@ -15,6 +16,16 @@ namespace BusinessLogic.Shared
         }
 
         public abstract Task<AGameSettingsBarData> GetSettingsBarData();
+
+        public List<GameLevelType> GetLevelTypeItems()
+        {
+            return new List<GameLevelType>
+            {
+                new GameLevelType {Key = (int)GameLevelTypeEnum.Easy, Value = "Leicht"},
+                new GameLevelType {Key = (int)GameLevelTypeEnum.Medium, Value = "Mittel"},
+                new GameLevelType {Key = (int)GameLevelTypeEnum.Hard, Value = "Schwer"},
+            };
+        }
 
         #region dispose
 

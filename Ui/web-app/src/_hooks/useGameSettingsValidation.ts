@@ -1,0 +1,38 @@
+import React from "react";
+import { IGameSettings } from "../_lib/_intefaces/IGameSettings";
+import { GameTypeEnum } from "../_lib/_enums/GameTypeEnum";
+
+interface IGameSettingsValidationResult {
+  isValid: boolean;
+  validate: (settings: IGameSettings, gameType: GameTypeEnum) => void;
+}
+
+export const useGameSettingsValidation = (): IGameSettingsValidationResult => {
+  const [isValid, setIsValid] = React.useState<boolean>(false);
+
+  const validateMemorySettings = React.useCallback(
+    (settings: IGameSettings) => {
+      setIsValid(
+        settings.level !== undefined &&
+          settings.topic !== undefined &&
+          settings.pairs >= 4
+      );
+    },
+    []
+  );
+
+  const validate = React.useCallback(
+    (settings: IGameSettings, gameType: GameTypeEnum) => {
+      switch (gameType) {
+        case GameTypeEnum.Memory:
+          validateMemorySettings(settings);
+      }
+    },
+    [validateMemorySettings]
+  );
+
+  return {
+    isValid,
+    validate,
+  };
+};

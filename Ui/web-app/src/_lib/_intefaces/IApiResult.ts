@@ -1,8 +1,9 @@
-import { IApiOptions } from "./IApiOptions";
+import { IResponseData } from "../../_hooks/useApiReducer";
 
-export interface IApiResult<TItem> {
-  items: TItem[];
+export interface IApiResult<T> {
+  response?: T;
+  error?: Error;
   isLoading: boolean;
   dataIsBound: boolean;
-  get: (options?: IApiOptions) => Promise<void>;
+  fetchData: (url?: string, options?: RequestInit) => Promise<void>;
 }
