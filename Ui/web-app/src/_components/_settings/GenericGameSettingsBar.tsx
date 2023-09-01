@@ -136,27 +136,33 @@ const GenericGameSettingsBar: React.FC<IProps> = (props) => {
           justifyContent: "center",
         }}
       >
-        <FormDropdown
-          label="Thema"
-          selectedKey={selectedTopic}
-          items={topicItems}
-          hasDisabledItem={true}
-          onChange={handleTopicChanged}
-        />
-        <FormDropdown
-          label="Level"
-          selectedKey={selectedLevel}
-          items={levelItems}
-          hasDisabledItem={false}
-          onChange={handleLevelChanged}
-        />
-        <FormDropdown
-          label="Paare"
-          selectedKey={selectedPairsCount}
-          items={pairItems}
-          hasDisabledItem={false}
-          onChange={handlePairsCountChanged}
-        />
+        {config.hasTopic && (
+          <FormDropdown
+            label="Thema"
+            selectedKey={selectedTopic}
+            items={topicItems}
+            hasDisabledItem={true}
+            onChange={handleTopicChanged}
+          />
+        )}
+        {config.defaultLevel && (
+          <FormDropdown
+            label="Level"
+            selectedKey={selectedLevel}
+            items={levelItems}
+            hasDisabledItem={false}
+            onChange={handleLevelChanged}
+          />
+        )}
+        {config.hasFilePairs && (
+          <FormDropdown
+            label="Paare"
+            selectedKey={selectedPairsCount}
+            items={pairItems}
+            hasDisabledItem={false}
+            onChange={handlePairsCountChanged}
+          />
+        )}
       </Grid>
     </Grid>
   );
