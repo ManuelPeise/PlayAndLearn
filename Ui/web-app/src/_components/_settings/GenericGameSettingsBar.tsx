@@ -114,9 +114,9 @@ const GenericGameSettingsBar: React.FC<IProps> = (props) => {
         margin: "16px",
         marginTop: marginTop,
         padding: "2px",
-        backgroundColor: "lightgray",
+        backgroundColor: "lightblue",
         opacity: ".8",
-        borderRadius: "16px",
+        borderRadius: "8px",
       }}
     >
       <Grid

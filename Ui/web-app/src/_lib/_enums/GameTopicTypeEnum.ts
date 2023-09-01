@@ -1,4 +1,4 @@
 export const enum GameTopicTypeEnum {
-  Unknown = -1,
-  Alphabet = 0,
+  Unknown = 0,
+  Alphabet = 1,
 }
