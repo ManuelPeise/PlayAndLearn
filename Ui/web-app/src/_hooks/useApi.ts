@@ -5,6 +5,7 @@ import { useApiReducer } from "./useApiReducer";
 type CacheData<T> = { [url: string]: T };
 
 export function UseApi<T = unknown>(
+  IsLoadingCallback: (isLoading: boolean) => void,
   apiUrl?: string,
   apiOptions?: RequestInit
 ): IApiResult<T> {
@@ -21,10 +22,14 @@ export function UseApi<T = unknown>(
     async (url?: string, options?: RequestInit) => {
       if (url !== undefined) urlRef.current = url;
       if (options !== undefined) optionsRef.current = options;
-      dispatch({ type: "loading", payload: true });
+
+      IsLoadingCallback(true);
 
       if (cache.current[urlRef.current]) {
         dispatch({ type: "fetched", payload: cache.current[urlRef.current] });
+
+        IsLoadingCallback(false);
+
         return;
       }
 
@@ -42,13 +47,17 @@ export function UseApi<T = unknown>(
         if (cancelRequest.current) return;
 
         dispatch({ type: "fetched", payload: responseData });
+
+        IsLoadingCallback(false);
       } catch (error) {
+        IsLoadingCallback(false);
+
         if (cancelRequest.current) return;
 
         dispatch({ type: "error", payload: error as Error });
       }
     },
-    []
+    [IsLoadingCallback]
   );
 
   useEffect(() => {
@@ -65,7 +74,6 @@ export function UseApi<T = unknown>(
 
   return {
     response: data.data,
-    isLoading: data.isLoading,
     error: data.error,
     dataIsBound: data.data !== undefined,
     fetchData,

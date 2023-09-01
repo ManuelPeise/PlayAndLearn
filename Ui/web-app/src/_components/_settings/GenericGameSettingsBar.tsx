@@ -14,11 +14,20 @@ interface IProps {
   settings: IGameSettings;
   config: IGameConfiguration;
   gameType: GameTypeEnum;
+  marginTop?: number;
+  handleIsLoadingChanged: (isLoading: boolean) => void;
   handleSettingsChanged: (settings: IGameSettings) => void;
 }
 
 const GenericGameSettingsBar: React.FC<IProps> = (props) => {
-  const { settings, config, gameType, handleSettingsChanged } = props;
+  const {
+    settings,
+    config,
+    gameType,
+    marginTop,
+    handleIsLoadingChanged,
+    handleSettingsChanged,
+  } = props;
 
   const [selectedTopic, setSelectedTopic] = React.useState<number>(
     settings.topic ?? config.defaultTopic
@@ -31,6 +40,7 @@ const GenericGameSettingsBar: React.FC<IProps> = (props) => {
   );
 
   const dataService = UseApi<IGameSettingsBarData>(
+    handleIsLoadingChanged,
     `${controller}?gameType=${gameType}`,
     { method: "GET", mode: "cors" }
   );
@@ -101,10 +111,12 @@ const GenericGameSettingsBar: React.FC<IProps> = (props) => {
         display: "flex",
         justifyContent: "center",
         alignContent: "space-around",
-        padding: "16px",
+        margin: "16px",
+        marginTop: marginTop,
+        padding: "2px",
         backgroundColor: "lightgray",
         opacity: ".8",
-        borderRadius: "15px",
+        borderRadius: "16px",
       }}
     >
       <Grid
@@ -145,7 +157,7 @@ const GenericGameSettingsBar: React.FC<IProps> = (props) => {
             onChange={handleTopicChanged}
           />
         )}
-        {config.defaultLevel && (
+        {config.hasLevel && (
           <FormDropdown
             label="Level"
             selectedKey={selectedLevel}
