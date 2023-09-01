@@ -4,6 +4,9 @@ import { IGameSettings } from "../../_lib/_intefaces/IGameSettings";
 import { GameTopicTypeEnum } from "../../_lib/_enums/GameTopicTypeEnum";
 import Banner from "../../_components/_text/Banner";
 import FormButton from "../../_components/_input/FormButton";
+import { UseApi } from "../../_hooks/useApi";
+import { IWord } from "./_intefaces/IWord";
+import { GameTypeEnum } from "../../_lib/_enums/GameTypeEnum";
 
 interface IProps {
   settings: IGameSettings;
@@ -12,16 +15,37 @@ interface IProps {
   handleIsloadingChanged: (isloading: boolean) => void;
 }
 
+const controller = `https://localhost:44379/Memory/GetWordList`;
+
 const MemoryGameContainer: React.FC<IProps> = (props) => {
   const { settings, isLoading, handleSettingsChanged, handleIsloadingChanged } =
     props;
 
-  // TODO implement endpoint for getting words by leveltype if topic is alphabet
-  // add table words with propeties: id, value, level
+  const wordDataService = UseApi<IWord[]>(handleIsloadingChanged);
+
+  React.useEffect(() => {
+    if (settings.topic === GameTopicTypeEnum.Alphabet) {
+      const getWords = async () => {
+        await wordDataService.fetchData(
+          `${controller}?gameType=${GameTypeEnum.Memory}&levelType=${settings.level}`,
+          { method: "GET", mode: "cors" }
+        );
+      };
+
+      void getWords();
+    }
+  }, [settings.topic, settings.level]);
 
   const handleClick = React.useCallback(async () => {
     handleSettingsChanged({ ...settings, isRunning: true });
   }, [settings, handleSettingsChanged]);
+
+  if (
+    settings.topic === GameTopicTypeEnum.Alphabet &&
+    !wordDataService.dataIsBound
+  ) {
+    return null;
+  }
 
   return (
     <Grid container style={{ display: "flex", justifyContent: "center" }}>
