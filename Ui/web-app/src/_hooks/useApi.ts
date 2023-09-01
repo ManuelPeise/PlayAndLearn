@@ -1,58 +1,73 @@
-import React from "react";
-import { IApiOptions } from "../_lib/_intefaces/IApiOptions";
+import React, { useEffect, useReducer, useRef } from "react";
 import { IApiResult } from "../_lib/_intefaces/IApiResult";
+import { useApiReducer } from "./useApiReducer";
 
-const UseApi = <TItem>(options: IApiOptions): IApiResult<TItem> => {
-  const [apiOptions, setApiOptions] = React.useState<IApiOptions>(options);
-  const [isLoading, setIsloading] = React.useState<boolean>(false);
-  const [items, setItems] = React.useState<TItem[]>([] as TItem[]);
+type CacheData<T> = { [url: string]: T };
 
-  const get = async (options?: IApiOptions) => {
-    if (options !== undefined) {
-      setApiOptions(options);
-    }
+export function UseApi<T = unknown>(
+  apiUrl?: string,
+  apiOptions?: RequestInit
+): IApiResult<T> {
+  const urlRef = useRef<string>(apiUrl ?? ({} as string));
+  const optionsRef = useRef<RequestInit>(apiOptions ?? ({} as RequestInit));
+  const cache = useRef<CacheData<T>>({});
+  const cancelRequest = useRef<boolean>(false);
 
-    const uri =
-      apiOptions.bodyJson !== undefined
-        ? `${apiOptions.url}${apiOptions.bodyJson}`
-        : apiOptions.url;
+  const reducer = useApiReducer<T>();
 
-    setIsloading(true);
+  const [data, dispatch] = useReducer(reducer.reducer, reducer.initialState);
 
-    await fetch(uri, { method: apiOptions.method, mode: "cors" }).then(
-      async (res) => {
-        if (res.status === 200) {
-          const response = await JSON.parse(JSON.stringify(await res.json()));
+  const fetchData = React.useCallback(
+    async (url?: string, options?: RequestInit) => {
+      if (url !== undefined) urlRef.current = url;
+      if (options !== undefined) optionsRef.current = options;
+      dispatch({ type: "loading", payload: true });
 
-          if (Array.isArray(response)) {
-            setItems(response);
-          } else {
-            const data: TItem[] = [];
-            data.push(response as TItem);
-
-            setItems(data);
-          }
-        }
+      if (cache.current[urlRef.current]) {
+        dispatch({ type: "fetched", payload: cache.current[urlRef.current] });
+        return;
       }
-    );
 
-    setIsloading(false);
-  };
+      try {
+        const response = await fetch(urlRef.current, optionsRef.current);
 
-  React.useEffect(() => {
-    const fetchData = async () => {
-      await get(apiOptions);
+        if (!response.ok) {
+          throw new Error(response.statusText);
+        }
+
+        const responseData = (await response.json()) as T;
+
+        cache.current[urlRef.current] = responseData;
+
+        if (cancelRequest.current) return;
+
+        dispatch({ type: "fetched", payload: responseData });
+      } catch (error) {
+        if (cancelRequest.current) return;
+
+        dispatch({ type: "error", payload: error as Error });
+      }
+    },
+    []
+  );
+
+  useEffect(() => {
+    if (!urlRef.current) return;
+
+    cancelRequest.current = false;
+
+    void fetchData();
+
+    return () => {
+      cancelRequest.current = true;
     };
-
-    fetchData();
-  }, []);
+  }, [fetchData]);
 
   return {
-    items,
-    isLoading,
-    dataIsBound: items.length > 0 && !isLoading,
-    get,
+    response: data.data,
+    isLoading: data.isLoading,
+    error: data.error,
+    dataIsBound: data.data !== undefined,
+    fetchData,
   };
-};
-
-export default UseApi;
+}
