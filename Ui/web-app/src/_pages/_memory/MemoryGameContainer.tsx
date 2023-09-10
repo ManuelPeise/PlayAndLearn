@@ -1,12 +1,12 @@
 import React from "react";
 import Grid from "@mui/material/Grid";
 import { IGameSettings } from "../../_lib/_intefaces/IGameSettings";
-import { GameTopicTypeEnum } from "../../_lib/_enums/GameTopicTypeEnum";
-import Banner from "../../_components/_text/Banner";
-import FormButton from "../../_components/_input/FormButton";
-import { UseApi } from "../../_hooks/useApi";
-import { IWord } from "./_intefaces/IWord";
-import { GameTypeEnum } from "../../_lib/_enums/GameTypeEnum";
+import { useInputButtonProps } from "src/_components/_componentHooks/useInputButtonProps";
+import InputButton from "src/_components/_input/InputButton";
+import background from "./_backgrounds/memory_background_abc.jpg";
+import { IMemoryCard } from "./_intefaces/IMemoryCard";
+import { IMemoryCardRow } from "./_intefaces/IMemoryCardRow";
+import { Container } from "@mui/material";
 
 interface IProps {
   settings: IGameSettings;
@@ -15,69 +15,77 @@ interface IProps {
   handleIsloadingChanged: (isloading: boolean) => void;
 }
 
-const controller = `https://localhost:44379/Memory/GetWordList`;
-
 const MemoryGameContainer: React.FC<IProps> = (props) => {
+  // eslint-disable-next-line
   const { settings, isLoading, handleSettingsChanged, handleIsloadingChanged } =
     props;
-
-  const wordDataService = UseApi<IWord[]>(handleIsloadingChanged);
-
-  React.useEffect(() => {
-    if (settings.topic === GameTopicTypeEnum.Alphabet) {
-      const getWords = async () => {
-        await wordDataService.fetchData(
-          `${controller}?gameType=${GameTypeEnum.Memory}&levelType=${settings.level}`,
-          { method: "GET", mode: "cors" }
-        );
-      };
-
-      void getWords();
-    }
-  }, [settings.topic, settings.level]);
 
   const handleClick = React.useCallback(async () => {
     handleSettingsChanged({ ...settings, isRunning: true });
   }, [settings, handleSettingsChanged]);
 
-  if (
-    settings.topic === GameTopicTypeEnum.Alphabet &&
-    !wordDataService.dataIsBound
-  ) {
-    return null;
-  }
+  const startGameButtonProps = useInputButtonProps(
+    "button",
+    "Start",
+    isLoading,
+    "contained",
+    handleClick
+  );
+
+  const rows = React.useMemo((): IMemoryCardRow[] => {
+    const array: IMemoryCard[] = [];
+
+    for (let i = 0; i < 12; i++) {
+      array.push({
+        id: i,
+        foreGround: background,
+        background: background,
+      });
+    }
+
+    const rowCount = array.length / 4;
+    const rows: IMemoryCardRow[] = [];
+
+    for (let i = 0; i < rowCount; i++) {
+      let row: IMemoryCardRow = {
+        rowId: `row-${i}`,
+        cards: array.filter((x) => x.id >= i && x.id <= i + 3),
+      };
+
+      rows.push(row);
+    }
+
+    return rows;
+  }, []);
 
   return (
     <Grid container style={{ display: "flex", justifyContent: "center" }}>
-      {settings.topic === GameTopicTypeEnum.Alphabet && settings.isRunning && (
-        <Grid item xs={12}>
-          <Banner
-            text="Lass uns alle Buchstaben des Wortes 'Auto' finden!"
-            fontSize={24}
-            borderRadius={8}
-            backgroundColor="lightblue"
-            textColor="black"
-          />
-          <Grid
-            item
-            xs={12}
-            style={{ display: "flex", justifyContent: "center" }}
-          >
-            TODO ADD CARDS
-          </Grid>
+      {settings.isRunning && (
+        <Grid container style={{ display: "flex", justifyItems: "center" }}>
+          {rows.map((row) => {
+            return (
+              <Container
+                className="memory-card-container"
+                key={row.rowId}
+                style={{ display: "flex", justifyContent: "center" }}
+              >
+                {row.cards.map((card) => {
+                  return (
+                    <img
+                      className="memory-card"
+                      key={card.id}
+                      src={card.background}
+                      alt=""
+                    />
+                  );
+                })}
+              </Container>
+            );
+          })}
         </Grid>
       )}
       <Grid item xs={12}>
-        {!settings.isRunning && (
-          <FormButton
-            text="Spielen"
-            variant="contained"
-            fontsize={18}
-            xs={12}
-            disabled={isLoading}
-            handleClick={handleClick}
-          />
-        )}
+        {!settings.isRunning && <InputButton {...startGameButtonProps} />}
       </Grid>
     </Grid>
   );

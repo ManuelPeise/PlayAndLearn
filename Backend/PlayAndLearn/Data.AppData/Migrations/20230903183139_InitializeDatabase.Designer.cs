@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Data.AppData.Migrations
 {
     [DbContext(typeof(AppDataContext))]
-    [Migration("20230901214922_AddWordTable")]
-    partial class AddWordTable
+    [Migration("20230903183139_InitializeDatabase")]
+    partial class InitializeDatabase
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -34,12 +34,37 @@ namespace Data.AppData.Migrations
                         .IsRequired()
                         .HasColumnType("longtext");
 
-                    b.Property<int>("TopicType")
+                    b.HasKey("Id");
+
+                    b.ToTable("GameTopics");
+                });
+
+            modelBuilder.Entity("Shared.Models.Entities.MemoryCardEntity", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<int>("GameType")
+                        .HasColumnType("int");
+
+                    b.Property<byte[]>("Image")
+                        .IsRequired()
+                        .HasColumnType("longblob");
+
+                    b.Property<bool>("IsBackgroundImage")
+                        .HasColumnType("tinyint(1)");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<int>("TopicId")
                         .HasColumnType("int");
 
                     b.HasKey("Id");
 
-                    b.ToTable("GameTopics");
+                    b.ToTable("MemoryCards");
                 });
 
             modelBuilder.Entity("Shared.Models.Entities.WordEntity", b =>

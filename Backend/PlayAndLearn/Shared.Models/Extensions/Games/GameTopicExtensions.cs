@@ -12,8 +12,7 @@ namespace Shared.Models.Extensions.Games
                 Id = entity.Id,
                 Index = index,
                 GameType = entity.GameType,
-                TopicName = entity.TopicName,
-                TopicType = entity.TopicType,
+                TopicName = entity.TopicName
             };
         }
     }
