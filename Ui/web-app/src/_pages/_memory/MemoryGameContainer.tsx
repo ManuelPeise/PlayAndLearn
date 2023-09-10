@@ -39,7 +39,7 @@ const MemoryGameContainer: React.FC<IProps> = (props) => {
       array.push({
         id: i,
         foreGround: background,
-        background: background,
+        selected: false,
       });
     }
 
@@ -72,9 +72,10 @@ const MemoryGameContainer: React.FC<IProps> = (props) => {
                 {row.cards.map((card) => {
                   return (
                     <img
+                      id={card.id.toString()}
                       className="memory-card"
                       key={card.id}
-                      src={card.background}
+                      src={card.foreGround}
                       alt=""
                     />
                   );

@@ -1,4 +1,5 @@
-﻿using Shared.Models.Enums.Games;
+﻿using Shared.Models;
+using Shared.Models.Enums.Games;
 using Shared.Models.Games;
 
 namespace Shared.Games.Models

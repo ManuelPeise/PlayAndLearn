@@ -25,6 +25,17 @@ namespace Services.Games.Controllers
             _appDataContext = appDataContext;
         }
 
+        [HttpGet(Name = "GetPageData")]
+        public async Task<MemoryPageData> GetPageData()
+        {
+            using (var handler = _gameHandlerFactory.GetGameHandler(GameTypeEnum.Memory, _appDataContext))
+            {
+                var memoryHandler = (MemoryGameHandler)handler;
+                return await memoryHandler.GetPageData();
+
+            }
+        }
+
         [HttpGet(Name = "GetGameData")]
         public async Task<MemoryGameData> GetGameData(string gameType, string gameLevel, int topicId)
         {

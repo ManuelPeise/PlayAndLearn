@@ -22,6 +22,7 @@ namespace BusinessLogic.Shared
 
         public abstract Task<MemoryGameData> GetGameData(MemoryGameDataRequestModel requestModel);
 
+        public abstract Task<MemoryPageData> GetPageData();
         public List<KeyValueItem> GetLevelTypeItems()
         {
             return new List<KeyValueItem>

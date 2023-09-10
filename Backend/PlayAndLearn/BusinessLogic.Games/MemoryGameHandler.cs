@@ -133,6 +133,21 @@ namespace BusinessLogic.Games
             }
         }
        
+        public override async Task<MemoryPageData> GetPageData()
+        {
+            try
+            {
+                return new MemoryPageData
+                {
+                    Topics = await GetTopics(),
+                    Levels = GetLevelTypeItems()
+                };
+            }
+            catch (Exception exception)
+            {
+                return new MemoryPageData();
+            }
+        }
 
         private async Task<WordEntity?> GetWord(GameLevelTypeEnum levelType)
         {

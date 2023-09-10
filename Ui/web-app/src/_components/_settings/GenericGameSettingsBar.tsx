@@ -1,10 +1,7 @@
 import { Grid } from "@mui/material";
 import React from "react";
-import { UseApi } from "../../_hooks/useApi";
 import { IDropdownItem } from "../../_lib/_intefaces/IDropdownItem";
-import { GameTypeEnum } from "../../_lib/_enums/GameTypeEnum";
 import { IGameConfiguration } from "../../_lib/_intefaces/IGameSettingsConfiguration";
-import { IGameSettingsBarData } from "../../_lib/_intefaces/IGameSettingsBarData";
 import { IGameSettings } from "../../_lib/_intefaces/IGameSettings";
 import { useTranslation } from "react-i18next";
 import { NavLink } from "react-router-dom";
@@ -13,16 +10,15 @@ import InputDropdown from "../_input/InputDropDown";
 import { useInputButtonProps } from "../_componentHooks/useInputButtonProps";
 import InputButton from "../_input/InputButton";
 import InputComponentWrapper from "../_input/InputComponentWrapper";
-
-const controller = `${process.env.REACT_APP_GAME_SETTINGS_CONTROLLER}GetSettings`;
+import { IKeyValueItem } from "src/_lib/_intefaces/IKeyValueItem";
 
 interface IProps {
   settings: IGameSettings;
   config: IGameConfiguration;
-  gameType: GameTypeEnum;
   marginTop?: number;
   targetUrl: string;
-  handleIsLoadingChanged: (isLoading: boolean) => void;
+  topics: IKeyValueItem[];
+  levels: IKeyValueItem[];
   handleSettingsChanged: (settings: IGameSettings) => void;
 }
 
@@ -30,41 +26,34 @@ const GenericGameSettingsBar: React.FC<IProps> = (props) => {
   const {
     settings,
     config,
-    gameType,
     marginTop,
     targetUrl,
-    handleIsLoadingChanged,
+    topics,
+    levels,
     handleSettingsChanged,
   } = props;
 
   const { t } = useTranslation();
 
-  const dataService = UseApi<IGameSettingsBarData>(
-    handleIsLoadingChanged,
-    `${controller}`,
-    `?gameType=${gameType}`,
-    { method: "GET", mode: "cors" }
-  );
-
   const topicItems = React.useMemo(() => {
     const items: IDropdownItem[] = [];
 
-    dataService?.response?.gameTopics?.forEach((item) => {
+    topics?.forEach((item) => {
       items.push({ key: item.key, value: item.value });
     });
 
     return items;
-  }, [dataService.response?.gameTopics]);
+  }, [topics]);
 
   const levelItems = React.useMemo(() => {
     const items: IDropdownItem[] = [];
 
-    dataService?.response?.gameLevelTypeItems?.forEach((item) => {
+    levels.forEach((item) => {
       items.push({ key: item.key, value: item.value });
     });
 
     return items;
-  }, [dataService.response?.gameLevelTypeItems]);
+  }, [levels]);
 
   const topic = React.useMemo(() => {
     return t("memory:topic");
@@ -120,10 +109,6 @@ const GenericGameSettingsBar: React.FC<IProps> = (props) => {
     "text",
     () => {}
   );
-
-  if (!dataService.dataIsBound) {
-    return null;
-  }
 
   return (
     <Grid

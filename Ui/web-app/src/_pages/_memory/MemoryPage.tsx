@@ -46,10 +46,10 @@ const MemoryPage: React.FC = () => {
           <GenericGameSettingsBar
             settings={settings}
             config={configuration}
-            gameType={GameTypeEnum.Memory}
             marginTop={2}
             targetUrl="/memory/gameupload"
-            handleIsLoadingChanged={handler.handleIsloadingChanged}
+            topics={handler.topics}
+            levels={handler.levels}
             handleSettingsChanged={handleSettingsChanged}
           />
 
