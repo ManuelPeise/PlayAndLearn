@@ -1,9 +1,12 @@
 import React from "react";
 import Grid from "@mui/material/Grid";
 import { IGameSettings } from "../../_lib/_intefaces/IGameSettings";
-import Banner from "../../_components/_text/Banner";
 import { useInputButtonProps } from "src/_components/_componentHooks/useInputButtonProps";
 import InputButton from "src/_components/_input/InputButton";
+import background from "./_backgrounds/memory_background_abc.jpg";
+import { IMemoryCard } from "./_intefaces/IMemoryCard";
+import { IMemoryCardRow } from "./_intefaces/IMemoryCardRow";
+import { Container } from "@mui/material";
 
 interface IProps {
   settings: IGameSettings;
@@ -29,26 +32,58 @@ const MemoryGameContainer: React.FC<IProps> = (props) => {
     handleClick
   );
 
+  const rows = React.useMemo((): IMemoryCardRow[] => {
+    const array: IMemoryCard[] = [];
+
+    for (let i = 0; i < 12; i++) {
+      array.push({
+        id: i,
+        foreGround: background,
+        background: background,
+      });
+    }
+
+    const rowCount = array.length / 4;
+    const rows: IMemoryCardRow[] = [];
+
+    for (let i = 0; i < rowCount; i++) {
+      let row: IMemoryCardRow = {
+        rowId: `row-${i}`,
+        cards: array.filter((x) => x.id >= i && x.id <= i + 3),
+      };
+
+      rows.push(row);
+    }
+
+    return rows;
+  }, []);
+
   return (
     <Grid container style={{ display: "flex", justifyContent: "center" }}>
-      {/* {settings.topic === GameTopicTypeEnum.Alphabet && settings.isRunning && ( */}
-      <Grid item xs={12}>
-        <Banner
-          text="Lass uns alle Buchstaben des Wortes 'Auto' finden!"
-          fontSize={24}
-          borderRadius={8}
-          backgroundColor="lightblue"
-          textColor="black"
-        />
-        <Grid
-          item
-          xs={12}
-          style={{ display: "flex", justifyContent: "center" }}
-        >
-          TODO ADD CARDS
+      {settings.isRunning && (
+        <Grid container style={{ display: "flex", justifyItems: "center" }}>
+          {rows.map((row) => {
+            return (
+              <Container
+                className="memory-card-container"
+                key={row.rowId}
+                style={{ display: "flex", justifyContent: "center" }}
+              >
+                {row.cards.map((card) => {
+                  return (
+                    <img
+                      className="memory-card"
+                      key={card.id}
+                      src={card.background}
+                      alt=""
+                    />
+                  );
+                })}
+              </Container>
+            );
+          })}
         </Grid>
-      </Grid>
-      {/* )} */}
+      )}
       <Grid item xs={12}>
         {!settings.isRunning && <InputButton {...startGameButtonProps} />}
       </Grid>

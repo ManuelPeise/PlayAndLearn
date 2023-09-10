@@ -7,9 +7,9 @@ import { UseMemory } from "../../_hooks/useMemory";
 import { getGameConfiguration } from "../../_lib/_utils/GameConfigurationHandler";
 import { IGameSettings } from "../../_lib/_intefaces/IGameSettings";
 import { useGameSettingsValidation } from "../../_hooks/useGameSettingsValidation";
-import MemoryDataUploadDialog from "./MemoryDataUploadDialog";
 import { useTranslation } from "react-i18next";
 import PageLayout from "../PageLayout";
+import MemoryGameContainer from "./MemoryGameContainer";
 
 const MemoryPage: React.FC = () => {
   const validator = useGameSettingsValidation();
@@ -52,19 +52,13 @@ const MemoryPage: React.FC = () => {
             handleIsLoadingChanged={handler.handleIsloadingChanged}
             handleSettingsChanged={handleSettingsChanged}
           />
-          <MemoryDataUploadDialog
-            open={handler.fileUploadHandler.dialogOpen}
-            title="Memory Daten hinzufügen"
-            fileUploadHandler={handler.fileUploadHandler}
-            topicItems={handler.topics.filter((x) => x.key !== 1)}
-            handleClose={handler.fileUploadHandler.handleDialogClose}
+
+          <MemoryGameContainer
+            settings={settings}
+            isLoading={handler.isLoading}
+            handleSettingsChanged={handleSettingsChanged}
+            handleIsloadingChanged={handler.handleIsloadingChanged}
           />
-          {/* <MemoryGameContainer
-        settings={settings}
-        isLoading={handler.isLoading}
-        handleSettingsChanged={handleSettingsChanged}
-        handleIsloadingChanged={handler.handleIsloadingChanged}
-      /> */}
         </Grid>
       }
     />
