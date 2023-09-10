@@ -2,7 +2,7 @@ import React from "react";
 import { IGameSettings } from "../_lib/_intefaces/IGameSettings";
 import { GameTypeEnum } from "../_lib/_enums/GameTypeEnum";
 
-interface IGameSettingsValidationResult {
+export interface IGameSettingsValidationResult {
   isValid: boolean;
   validate: (settings: IGameSettings, gameType: GameTypeEnum) => void;
 }
@@ -14,8 +14,8 @@ export const useGameSettingsValidation = (): IGameSettingsValidationResult => {
     (settings: IGameSettings) => {
       setIsValid(
         settings.level !== undefined &&
-          settings.topic !== undefined &&
-          settings.pairs >= 4
+          settings.topicId !== undefined &&
+          settings.topicId !== 0
       );
     },
     []

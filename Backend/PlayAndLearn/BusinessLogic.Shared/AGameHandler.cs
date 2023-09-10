@@ -2,7 +2,10 @@
 
 using Data.AppData;
 using Shared.Games.Models;
+using Shared.Models;
 using Shared.Models.Enums.Games;
+using Shared.Models.Extensions.Games;
+using Shared.Models.Games;
 
 namespace BusinessLogic.Shared
 {
@@ -17,13 +20,15 @@ namespace BusinessLogic.Shared
 
         public abstract Task<AGameSettingsBarData> GetSettingsBarData();
 
-        public List<GameLevelType> GetLevelTypeItems()
+        public abstract Task<MemoryGameData> GetGameData(MemoryGameDataRequestModel requestModel);
+
+        public List<KeyValueItem> GetLevelTypeItems()
         {
-            return new List<GameLevelType>
+            return new List<KeyValueItem>
             {
-                new GameLevelType {Key = (int)GameLevelTypeEnum.Easy, Value = "Leicht"},
-                new GameLevelType {Key = (int)GameLevelTypeEnum.Medium, Value = "Mittel"},
-                new GameLevelType {Key = (int)GameLevelTypeEnum.Hard, Value = "Schwer"},
+                new KeyValueItem {Key = (int)GameLevelTypeEnum.Easy, Value = "Leicht"},
+                new KeyValueItem {Key = (int)GameLevelTypeEnum.Medium, Value = "Mittel"},
+                new KeyValueItem {Key = (int)GameLevelTypeEnum.Hard, Value = "Schwer"},
             };
         }
 

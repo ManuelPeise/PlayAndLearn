@@ -4,5 +4,9 @@ export interface IApiResult<T> {
   response?: T;
   error?: Error;
   dataIsBound: boolean;
-  fetchData: (url?: string, options?: RequestInit) => Promise<void>;
+  fetchData: (
+    url?: string,
+    queryString?: string,
+    options?: RequestInit
+  ) => Promise<void>;
 }

@@ -1,8 +1,13 @@
 ﻿using BusinessLogic.Games;
 using BusinessLogic.Shared.Interfaces;
 using Data.AppData;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Services.Shared;
+using Shared.Games.Models;
+using Shared.Models;
+using Shared.Models.Entities;
+using Shared.Models.Enums;
 using Shared.Models.Enums.Games;
 using Shared.Models.Games;
 
@@ -20,20 +25,63 @@ namespace Services.Games.Controllers
             _appDataContext = appDataContext;
         }
 
-        [HttpGet(Name = "GetWordList")]
-        public async Task<List<WordModel>> GetWordList(GameTypeEnum gameType, GameLevelTypeEnum levelType)
+        [HttpGet(Name = "GetGameData")]
+        public async Task<MemoryGameData> GetGameData(string gameType, string gameLevel, int topicId)
         {
-            using (var handler = _gameHandlerFactory.GetGameHandler(gameType, _appDataContext))
+            var type = (GameTypeEnum)Enum.Parse(typeof(GameTypeEnum), gameType);
+
+            using (var handler = _gameHandlerFactory.GetGameHandler(type, _appDataContext))
             {
-                if(gameType == GameTypeEnum.Memory)
+                var level = (GameLevelTypeEnum)Enum.Parse(typeof(GameLevelTypeEnum), gameLevel);
+
+                if (type == GameTypeEnum.Memory)
                 {
                     var memoryHandler = (MemoryGameHandler)handler;
-                    return await memoryHandler.GetWordList(levelType);
+                    return await memoryHandler.GetGameData(new MemoryGameDataRequestModel { GameType = type, GameLevel = level, TopicId = topicId });
                 }
 
-                return new List<WordModel>();
+                return new MemoryGameData { GameId = Guid.NewGuid(), GameLevel = level, GameType = type, Error = "Found unknown game type!" };
             }
         }
 
+        [HttpGet(Name = "GetTopics")]
+        public async Task<List<KeyValueItem>> GetTopics(string gameType)
+        {
+            var type = (GameTypeEnum)Enum.Parse(typeof(GameTypeEnum), gameType);
+
+            using (var handler = _gameHandlerFactory.GetGameHandler(type, _appDataContext))
+            {
+                if (type == GameTypeEnum.Memory)
+                {
+                    var memoryHandler = (MemoryGameHandler)handler;
+
+                    return await memoryHandler.GetTopics();
+
+                }
+
+                return new List<KeyValueItem>();
+            }
+        }
+
+        [HttpGet(Name = "GetFile")]
+        public async Task<FileStreamResult> GetFile()
+        {
+            var filePath = Path.Combine(Path.GetTempPath(), "testfile.csv");
+
+            if (System.IO.File.Exists(filePath))
+            {
+                System.IO.File.Delete(filePath);
+            }
+
+            var stream = System.IO.File.Create(filePath);
+
+            if (stream != null)
+            {
+                return File(stream, "application/octet-stream", "Ttestfile.csv");
+            }
+
+
+            return null;
+        }
     }
 }

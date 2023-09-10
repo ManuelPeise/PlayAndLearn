@@ -1,0 +1,9 @@
+{
+  "ok": "OK",
+  "cancel": "Abbrechen",
+  "save": "Speichern",
+  "lang": "Sprache",
+  "settings": "Einstellungen",
+  "selectFiles": "Dateien wählen",
+  "selectedFiles": "{0} / {1} Dateien ausgewählt"
+}

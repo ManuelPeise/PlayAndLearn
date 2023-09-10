@@ -2,19 +2,26 @@ import { Grid } from "@mui/material";
 import React from "react";
 import { UseApi } from "../../_hooks/useApi";
 import { IDropdownItem } from "../../_lib/_intefaces/IDropdownItem";
-import FormDropdown from "../_input/FormDropdown";
-import Typography from "@mui/material/Typography";
 import { GameTypeEnum } from "../../_lib/_enums/GameTypeEnum";
 import { IGameConfiguration } from "../../_lib/_intefaces/IGameSettingsConfiguration";
 import { IGameSettingsBarData } from "../../_lib/_intefaces/IGameSettingsBarData";
 import { IGameSettings } from "../../_lib/_intefaces/IGameSettings";
+import { useTranslation } from "react-i18next";
+import { NavLink } from "react-router-dom";
+import { useInputDropdownProps } from "../_componentHooks/useInputDropdownProps";
+import InputDropdown from "../_input/InputDropDown";
+import { useInputButtonProps } from "../_componentHooks/useInputButtonProps";
+import InputButton from "../_input/InputButton";
+import InputComponentWrapper from "../_input/InputComponentWrapper";
 
-const controller = `https://localhost:44379/GameSettings/GetSettings`;
+const controller = `${process.env.REACT_APP_GAME_SETTINGS_CONTROLLER}GetSettings`;
+
 interface IProps {
   settings: IGameSettings;
   config: IGameConfiguration;
   gameType: GameTypeEnum;
   marginTop?: number;
+  targetUrl: string;
   handleIsLoadingChanged: (isLoading: boolean) => void;
   handleSettingsChanged: (settings: IGameSettings) => void;
 }
@@ -25,23 +32,17 @@ const GenericGameSettingsBar: React.FC<IProps> = (props) => {
     config,
     gameType,
     marginTop,
+    targetUrl,
     handleIsLoadingChanged,
     handleSettingsChanged,
   } = props;
 
-  const [selectedTopic, setSelectedTopic] = React.useState<number>(
-    settings.topic ?? config.defaultTopic
-  );
-  const [selectedLevel, setSelectedLevel] = React.useState<number>(
-    settings.level ?? config.defaultLevel
-  );
-  const [selectedPairsCount, setSelectedPairsCount] = React.useState<number>(
-    settings.pairs >= 8 ? settings.pairs : config.defaultFilePairCount
-  );
+  const { t } = useTranslation();
 
   const dataService = UseApi<IGameSettingsBarData>(
     handleIsLoadingChanged,
-    `${controller}?gameType=${gameType}`,
+    `${controller}`,
+    `?gameType=${gameType}`,
     { method: "GET", mode: "cors" }
   );
 
@@ -49,7 +50,7 @@ const GenericGameSettingsBar: React.FC<IProps> = (props) => {
     const items: IDropdownItem[] = [];
 
     dataService?.response?.gameTopics?.forEach((item) => {
-      items.push({ key: item.index, value: item.topicName });
+      items.push({ key: item.key, value: item.value });
     });
 
     return items;
@@ -65,38 +66,59 @@ const GenericGameSettingsBar: React.FC<IProps> = (props) => {
     return items;
   }, [dataService.response?.gameLevelTypeItems]);
 
-  const pairItems = React.useMemo(() => {
-    const items: IDropdownItem[] = [];
+  const topic = React.useMemo(() => {
+    return t("memory:topic");
+  }, [t]);
 
-    dataService?.response?.pairCountSelectionItems?.forEach((item) => {
-      items.push({ key: item, value: item.toString() });
-    });
+  const skill = React.useMemo(() => {
+    return t("memory:skill");
+  }, [t]);
 
-    return items;
-  }, [dataService.response?.pairCountSelectionItems]);
+  const addGame = React.useMemo(() => {
+    return t("memory:addGame");
+  }, [t]);
 
-  const handleTopicChanged = React.useCallback(
-    (key: number) => {
-      setSelectedTopic(key);
-      handleSettingsChanged({ ...settings, topic: key });
+  const levelCallBack = React.useCallback(
+    (value: any) => {
+      console.log(value);
+      handleSettingsChanged({ ...settings, level: value });
     },
     [settings, handleSettingsChanged]
   );
 
-  const handleLevelChanged = React.useCallback(
-    (key: number) => {
-      setSelectedLevel(key);
-      handleSettingsChanged({ ...settings, level: key });
+  const topicCallBack = React.useCallback(
+    (value: any) => {
+      handleSettingsChanged({ ...settings, topicId: value });
     },
     [settings, handleSettingsChanged]
   );
 
-  const handlePairsCountChanged = React.useCallback(
-    (key: number) => {
-      setSelectedPairsCount(key);
-      handleSettingsChanged({ ...settings, pairs: key });
-    },
-    [settings, handleSettingsChanged]
+  const topicDropdownProps = useInputDropdownProps(
+    false,
+    false,
+    settings.topicId,
+    topicItems,
+    topic,
+    undefined,
+    topicCallBack
+  );
+
+  const levelDropdownProps = useInputDropdownProps(
+    false,
+    false,
+    settings.topicId,
+    levelItems,
+    skill,
+    undefined,
+    levelCallBack
+  );
+
+  const buttonProps = useInputButtonProps(
+    "button",
+    addGame,
+    false,
+    "text",
+    () => {}
   );
 
   if (!dataService.dataIsBound) {
@@ -125,15 +147,25 @@ const GenericGameSettingsBar: React.FC<IProps> = (props) => {
         md={6}
         xl={6}
         style={{
-          display: "flex",
-          justifyContent: "center",
-          alignItems: "center",
           height: "6rem",
+          display: "flex",
+          alignItems: "center",
+          flexDirection: "row",
+          justifyContent: "center",
         }}
       >
-        <Typography variant="h4" justifyContent="center" align="center">
-          {dataService.response?.title}
-        </Typography>
+        {config.hasTopic && (
+          <InputComponentWrapper
+            spacing={1}
+            children={<InputDropdown {...topicDropdownProps} />}
+          />
+        )}
+        {config.hasLevel && (
+          <InputComponentWrapper
+            spacing={1}
+            children={<InputDropdown {...levelDropdownProps} />}
+          />
+        )}
       </Grid>
       <Grid
         item
@@ -148,33 +180,9 @@ const GenericGameSettingsBar: React.FC<IProps> = (props) => {
           justifyContent: "center",
         }}
       >
-        {config.hasTopic && (
-          <FormDropdown
-            label="Thema"
-            selectedKey={selectedTopic}
-            items={topicItems}
-            hasDisabledItem={true}
-            onChange={handleTopicChanged}
-          />
-        )}
-        {config.hasLevel && (
-          <FormDropdown
-            label="Level"
-            selectedKey={selectedLevel}
-            items={levelItems}
-            hasDisabledItem={false}
-            onChange={handleLevelChanged}
-          />
-        )}
-        {config.hasFilePairs && (
-          <FormDropdown
-            label="Paare"
-            selectedKey={selectedPairsCount}
-            items={pairItems}
-            hasDisabledItem={false}
-            onChange={handlePairsCountChanged}
-          />
-        )}
+        <NavLink style={{ textDecoration: "none" }} to={targetUrl}>
+          <InputButton {...buttonProps} />
+        </NavLink>
       </Grid>
     </Grid>
   );

@@ -1,11 +1,11 @@
-﻿using Shared.Models.Games;
+﻿using Shared.Models;
+using Shared.Models.Games;
 
 namespace Shared.Games.Models
 {
     public class MemorySettingsBarData: AGameSettingsBarData
     {
-        public List<GameLevelType> GameLevelTypeItems { get; set; } = new List<GameLevelType>();
-        public List<int> PairCountSelectionItems { get; set; } = new List<int>();
-        public List<GameTopicExportModel> GameTopics { get; set; } = new List<GameTopicExportModel>();
+        public List<KeyValueItem> GameLevelTypeItems { get; set; } = new List<KeyValueItem>();
+        public List<KeyValueItem> GameTopics { get; set; } = new List<KeyValueItem>();
     }
 }

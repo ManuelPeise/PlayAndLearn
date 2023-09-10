@@ -10,7 +10,7 @@ const Loadingindicator: React.FC<IProps> = (props) => {
   const { isLoading } = props;
 
   return (
-    <Box sx={{ width: "98%", height: "1rem", padding: "5px" }}>
+    <Box sx={{ width: "100vw", height: ".5rem", padding: "1px" }}>
       {isLoading && <LinearProgress color="warning" />}
     </Box>
   );

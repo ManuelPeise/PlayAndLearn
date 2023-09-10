@@ -3,6 +3,6 @@ export interface IGameConfiguration {
   hasLevel: boolean;
   hasFilePairs: boolean;
   defaultFilePairCount: number;
-  defaultTopic: number;
+  defaultTopicId: number;
   defaultLevel: number;
 }

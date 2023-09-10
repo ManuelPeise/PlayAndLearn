@@ -2,16 +2,15 @@ import React, { useEffect, useReducer, useRef } from "react";
 import { IApiResult } from "../_lib/_intefaces/IApiResult";
 import { useApiReducer } from "./useApiReducer";
 
-type CacheData<T> = { [url: string]: T };
-
 export function UseApi<T = unknown>(
   IsLoadingCallback: (isLoading: boolean) => void,
   apiUrl?: string,
+  queryString?: string,
   apiOptions?: RequestInit
 ): IApiResult<T> {
-  const urlRef = useRef<string>(apiUrl ?? ({} as string));
+  const urlRef = useRef<string>(`${apiUrl}${queryString}` ?? ({} as string));
   const optionsRef = useRef<RequestInit>(apiOptions ?? ({} as RequestInit));
-  const cache = useRef<CacheData<T>>({});
+
   const cancelRequest = useRef<boolean>(false);
 
   const reducer = useApiReducer<T>();
@@ -19,36 +18,36 @@ export function UseApi<T = unknown>(
   const [data, dispatch] = useReducer(reducer.reducer, reducer.initialState);
 
   const fetchData = React.useCallback(
-    async (url?: string, options?: RequestInit) => {
-      if (url !== undefined) urlRef.current = url;
+    async (url?: string, queryString?: string, options?: RequestInit) => {
+      if (url !== undefined && queryString !== undefined) {
+        urlRef.current = `${url}${queryString}`;
+      } else if (url !== undefined) {
+        urlRef.current = `${url}`;
+      }
+
       if (options !== undefined) optionsRef.current = options;
 
       IsLoadingCallback(true);
 
-      if (cache.current[urlRef.current]) {
-        dispatch({ type: "fetched", payload: cache.current[urlRef.current] });
-
-        IsLoadingCallback(false);
-
-        return;
-      }
-
       try {
-        const response = await fetch(urlRef.current, optionsRef.current);
+        if (
+          urlRef.current !== undefined &&
+          optionsRef.current.method !== undefined
+        ) {
+          const response = await fetch(urlRef.current, optionsRef.current);
 
-        if (!response.ok) {
-          throw new Error(response.statusText);
+          if (!response.ok) {
+            throw new Error(response.statusText);
+          }
+
+          const responseData = (await response.json()) as T;
+
+          if (cancelRequest.current) return;
+
+          dispatch({ type: "fetched", payload: responseData });
+
+          IsLoadingCallback(false);
         }
-
-        const responseData = (await response.json()) as T;
-
-        cache.current[urlRef.current] = responseData;
-
-        if (cancelRequest.current) return;
-
-        dispatch({ type: "fetched", payload: responseData });
-
-        IsLoadingCallback(false);
       } catch (error) {
         IsLoadingCallback(false);
 
