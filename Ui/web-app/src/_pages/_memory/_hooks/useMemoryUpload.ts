@@ -1,11 +1,11 @@
-import { IMemorySettings } from "../_intefaces/IMemorySettings";
+import { IMemoryUploadSettings } from "../_intefaces/IMemoryUploadSettings";
 import { UseApi } from "src/_hooks/useApi";
 import React from "react";
 import { IMemoryFileMapping } from "../_intefaces/IMemoryFileMapping";
 import UseFileDownloadApi from "src/_hooks/useFileDownloadApi";
 
 interface IUseMemorySettingsResult {
-  originalSettings: IMemorySettings;
+  originalSettings: IMemoryUploadSettings;
   isLoading: boolean;
   fileUploadDialogOpen: boolean;
   handleAutocompleteChanged: (value: string) => Promise<void>;
@@ -27,9 +27,9 @@ interface IGameSettingsRequestModel {
 const memoryGameUploadController = `${process.env.REACT_APP_API_URL}MemoryGameUpload/`;
 
 export const useMemoryUpload = (
-  settings: IMemorySettings,
+  settings: IMemoryUploadSettings,
   isLoading: boolean,
-  onSettingsChanged: (settings: IMemorySettings) => void,
+  onSettingsChanged: (settings: IMemoryUploadSettings) => void,
   handleIsLoading: (isLoading: boolean) => void
 ): IUseMemorySettingsResult => {
   const isAcceptedFile = React.useCallback((fileName: string): boolean => {
@@ -40,7 +40,9 @@ export const useMemoryUpload = (
     );
   }, []);
 
-  const originalSettings = React.useRef<IMemorySettings>({} as IMemorySettings);
+  const originalSettings = React.useRef<IMemoryUploadSettings>(
+    {} as IMemoryUploadSettings
+  );
 
   const {
     settingsApi,
@@ -48,7 +50,7 @@ export const useMemoryUpload = (
     fileUploadApi,
     templateFileDownloadApi,
   } = {
-    settingsApi: UseApi<IMemorySettings>(
+    settingsApi: UseApi<IMemoryUploadSettings>(
       handleIsLoading,
       `${memoryGameUploadController}GetInitialSate`,
       "",
@@ -76,12 +78,6 @@ export const useMemoryUpload = (
     }
     // eslint-disable-next-line
   }, [settingsApi.response]);
-
-  // React.useEffect(() => {
-  //   if (templateFileDownloadApi.dataIsBound) {
-  //     console.log("data is bound");
-  //   }
-  // }, [templateFileDownloadApi.dataIsBound]);
 
   const getFileType = React.useCallback(
     (

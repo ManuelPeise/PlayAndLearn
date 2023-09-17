@@ -5,22 +5,24 @@ import { IGameSettingsValidationResult } from "./useGameSettingsValidation";
 import { IGameDataResponse } from "../_pages/_memory/_intefaces/IMemoryGameData";
 import { IKeyValueItem } from "../_lib/_intefaces/IKeyValueItem";
 import { UseApi } from "./useApi";
-import { IMemoryPageData } from "src/_pages/_memory/_intefaces/IMemoryPageData";
+import { IMemoryPageGameData } from "src/_pages/_memory/_intefaces/IMemoryPageGameData";
 import { useTranslation } from "react-i18next";
 import { IGameConfiguration } from "src/_lib/_intefaces/IGameSettingsConfiguration";
-import { IMemoryGameDataRequesrModel } from "src/_pages/_memory/_intefaces/IMemoryGameDataRequesrModel";
+import { IMemoryGameDataRequestModel } from "src/_pages/_memory/_intefaces/IMemoryGameDataRequestModel";
 
 interface IUseMemoryResult {
   isLoading: boolean;
   gameData: IGameDataResponse;
-  pageData: IMemoryPageData;
+  pageData: IMemoryPageGameData;
   settings: IGameSettings;
   validSettings: boolean;
   handleIsloadingChanged: (isLoading: boolean) => void;
   handleSettingsChanged: (settings: IGameSettings) => void;
   onStartGame: () => Promise<boolean>;
 }
-const pageDataEndpoint = `${process.env.REACT_APP_GAME_MEMORY_CONTROLLER}GetPageData`;
+
+const memoryGameEndpoint = `${process.env.REACT_APP_API_URL}MemoryGame/`;
+
 const gameDataEndpoint = `${process.env.REACT_APP_GAME_MEMORY_CONTROLLER}GetGameData`;
 
 export const UseMemory = (
@@ -47,9 +49,9 @@ export const UseMemory = (
     [validator]
   );
   const dataservices = {
-    pageDataService: UseApi<IMemoryPageData>(
+    pageDataService: UseApi<IMemoryPageGameData>(
       handleIsloadingChanged,
-      pageDataEndpoint,
+      `${memoryGameEndpoint}GetPageData`,
       "",
       { method: "GET", mode: "cors" }
     ),
@@ -59,7 +61,7 @@ export const UseMemory = (
     handleIsloadingChanged(true);
 
     if (validator.isValid) {
-      var model: IMemoryGameDataRequesrModel = {
+      var model: IMemoryGameDataRequestModel = {
         selectedLevel: settings.level,
         selectedPlayer: settings.player,
         selectedTopic: settings.topic,
@@ -90,7 +92,7 @@ export const UseMemory = (
     handleIsloadingChanged,
   ]);
 
-  const pageData = React.useMemo((): IMemoryPageData => {
+  const pageData = React.useMemo((): IMemoryPageGameData => {
     const topicItems: IKeyValueItem[] = [];
     const levelItems: IKeyValueItem[] = [];
     const playerItems: IKeyValueItem[] = [];

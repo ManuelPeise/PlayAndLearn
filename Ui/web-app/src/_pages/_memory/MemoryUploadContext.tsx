@@ -1,11 +1,11 @@
 import React, { ReactNode, createContext } from "react";
 import { IMemoryUploadContext } from "./_intefaces/IMemoryUploadContext";
-import { IMemorySettings } from "./_intefaces/IMemorySettings";
+import { IMemoryUploadSettings } from "./_intefaces/IMemoryUploadSettings";
 
 const initialState: IMemoryUploadContext = {
   settings: {},
   isLoading: false,
-  onSettingsChanged: (settings: Partial<IMemorySettings>) => {},
+  onSettingsChanged: (settings: Partial<IMemoryUploadSettings>) => {},
   onHandleIsLoading: (isLoading: boolean) => {},
 } as IMemoryUploadContext;
 
@@ -17,9 +17,8 @@ type MemoryUploadProviderProps = {
 };
 
 const MemoryUploadProvider = (props: MemoryUploadProviderProps) => {
-  const [uploadSettings, setUploadSettings] = React.useState<IMemorySettings>(
-    initialState.settings
-  );
+  const [uploadSettings, setUploadSettings] =
+    React.useState<IMemoryUploadSettings>(initialState.settings);
   const [isLoading, setIsloading] = React.useState<boolean>(
     initialState.isLoading
   );
@@ -29,7 +28,7 @@ const MemoryUploadProvider = (props: MemoryUploadProviderProps) => {
   }, []);
 
   const onSettingsChanged = React.useCallback(
-    (settings: Partial<IMemorySettings>) => {
+    (settings: Partial<IMemoryUploadSettings>) => {
       setUploadSettings({ ...uploadSettings, ...settings });
     },
     [uploadSettings, setUploadSettings]

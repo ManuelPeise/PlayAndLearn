@@ -2,7 +2,7 @@ import { IGameConfiguration } from "src/_lib/_intefaces/IGameSettingsConfigurati
 import { IKeyValueItem } from "src/_lib/_intefaces/IKeyValueItem";
 import { IGameDataResponse } from "./IMemoryGameData";
 
-export interface IMemoryPageData {
+export interface IMemoryPageGameData {
   topicDropdownItems: IKeyValueItem[];
   levelDropdownItems: IKeyValueItem[];
   playerDropdownItems: IKeyValueItem[];

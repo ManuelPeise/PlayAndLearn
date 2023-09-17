@@ -232,8 +232,6 @@ namespace BusinessLogic.Games
             }
         }
 
-
-
         private async Task<List<KeyValueItem>> GetSettingsDropdownTopicItems()
         {
             try
@@ -340,6 +338,7 @@ namespace BusinessLogic.Games
                 return new MemoryPageData();
             }
         }
+        
         public async Task<FileDownload?> GetWordlistFileStream()
         {
             var resource = Properties.Resources.MemoryWordList;

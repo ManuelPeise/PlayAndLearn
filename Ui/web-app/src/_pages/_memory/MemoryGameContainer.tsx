@@ -66,31 +66,31 @@ const MemoryGameContainer: React.FC<IProps> = (props) => {
 
   return (
     <Grid container style={{ display: "flex", justifyContent: "center" }}>
-      {settings.isRunning && (
-        <Grid container style={{ display: "flex", justifyItems: "center" }}>
-          {rows.map((row) => {
-            return (
-              <Container
-                className="memory-card-container"
-                key={row.rowId}
-                style={{ display: "flex", justifyContent: "center" }}
-              >
-                {row.cards.map((card) => {
-                  return (
-                    <img
-                      id={card.id.toString()}
-                      className="memory-card"
-                      key={card.id}
-                      src={card.foreGround}
-                      alt=""
-                    />
-                  );
-                })}
-              </Container>
-            );
-          })}
-        </Grid>
-      )}
+      {/* {settings.isRunning && ( */}
+      <Grid container style={{ display: "flex", justifyItems: "center" }}>
+        {rows.map((row) => {
+          return (
+            <Container
+              className="memory-card-container"
+              key={row.rowId}
+              style={{ display: "flex", justifyContent: "center" }}
+            >
+              {row.cards.map((card) => {
+                return (
+                  <img
+                    id={card.id.toString()}
+                    className="memory-card"
+                    key={card.id}
+                    src={card.foreGround}
+                    alt=""
+                  />
+                );
+              })}
+            </Container>
+          );
+        })}
+      </Grid>
+      {/* )} */}
       <Grid item xs={12}>
         {!settings.isRunning && <InputButton {...startGameButtonProps} />}
       </Grid>

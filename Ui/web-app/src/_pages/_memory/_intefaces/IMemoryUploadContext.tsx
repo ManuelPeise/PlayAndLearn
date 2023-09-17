@@ -1,9 +1,9 @@
 import { Dispatch, SetStateAction } from "react";
-import { IMemorySettings } from "./IMemorySettings";
+import { IMemoryUploadSettings } from "./IMemoryUploadSettings";
 
 export interface IMemoryUploadContext {
-  settings: IMemorySettings;
+  settings: IMemoryUploadSettings;
   isLoading: boolean;
-  onSettingsChanged: Dispatch<SetStateAction<Partial<IMemorySettings>>>;
+  onSettingsChanged: Dispatch<SetStateAction<Partial<IMemoryUploadSettings>>>;
   onHandleIsLoading: Dispatch<SetStateAction<boolean>>;
 }

@@ -9,14 +9,14 @@ import InputDropdown from "../_input/InputDropDown";
 import { useInputButtonProps } from "../_componentHooks/useInputButtonProps";
 import InputButton from "../_input/InputButton";
 import InputComponentWrapper from "../_input/InputComponentWrapper";
-import { IMemoryPageData } from "src/_pages/_memory/_intefaces/IMemoryPageData";
+import { IMemoryPageGameData } from "src/_pages/_memory/_intefaces/IMemoryPageGameData";
 
 interface IProps {
   settings: IGameSettings;
   config: IGameConfiguration;
   marginTop?: number;
   targetUrl: string;
-  pageData: IMemoryPageData;
+  pageData: IMemoryPageGameData;
   handleSettingsChanged: (settings: IGameSettings) => void;
 }
 
