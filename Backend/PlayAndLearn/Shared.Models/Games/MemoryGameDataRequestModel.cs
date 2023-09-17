@@ -4,8 +4,10 @@ namespace Shared.Models.Games
 {
     public class MemoryGameDataRequestModel
     {
-        public GameLevelTypeEnum GameLevel { get; set; }
         public GameTypeEnum GameType { get; set; }
-        public int TopicId { get; set; }
+        public int SelectedLevel { get; set; }
+        public int SelectedTopic { get; set; }
+        public int SelectedPlayer { get; set; }
+
     }
 }

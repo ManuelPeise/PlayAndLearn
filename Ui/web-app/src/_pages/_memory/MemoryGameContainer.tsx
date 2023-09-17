@@ -7,27 +7,33 @@ import background from "./_backgrounds/memory_background_abc.jpg";
 import { IMemoryCard } from "./_intefaces/IMemoryCard";
 import { IMemoryCardRow } from "./_intefaces/IMemoryCardRow";
 import { Container } from "@mui/material";
+import { IGameDataResponse } from "./_intefaces/IMemoryGameData";
+import ErrorDialog from "src/_components/_dialogs/ErrorDialog";
 
 interface IProps {
   settings: IGameSettings;
   isLoading: boolean;
+  isValid: boolean;
+  gameData: IGameDataResponse;
   handleSettingsChanged: (settings: IGameSettings) => void;
   handleIsloadingChanged: (isloading: boolean) => void;
+  onStartGame: () => Promise<boolean>;
 }
 
 const MemoryGameContainer: React.FC<IProps> = (props) => {
   // eslint-disable-next-line
-  const { settings, isLoading, handleSettingsChanged, handleIsloadingChanged } =
-    props;
+  const { settings, gameData, handleSettingsChanged, onStartGame } = props;
 
   const handleClick = React.useCallback(async () => {
-    handleSettingsChanged({ ...settings, isRunning: true });
-  }, [settings, handleSettingsChanged]);
+    if (await onStartGame()) {
+      handleSettingsChanged({ ...settings, isRunning: true });
+    }
+  }, [settings, onStartGame, handleSettingsChanged]);
 
   const startGameButtonProps = useInputButtonProps(
     "button",
     "Start",
-    isLoading,
+    false,
     "contained",
     handleClick
   );
@@ -88,6 +94,13 @@ const MemoryGameContainer: React.FC<IProps> = (props) => {
       <Grid item xs={12}>
         {!settings.isRunning && <InputButton {...startGameButtonProps} />}
       </Grid>
+      {gameData !== undefined && gameData != null && (
+        <ErrorDialog
+          open={gameData?.error?.length > 0}
+          errorTextKey={gameData.error}
+          handleClose={() => {}}
+        />
+      )}
     </Grid>
   );
 };

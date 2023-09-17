@@ -1,26 +1,42 @@
-import { Autocomplete, Box } from "@mui/material";
+import { Autocomplete, Box, TextField } from "@mui/material";
 import React from "react";
-import { IUseInputTextfieldProps } from "../_componentHooks/useInputTextFieldProps";
-import InputTextField from "./InputTextField";
 
-interface IProps extends IUseInputTextfieldProps {
+interface IProps {
+  fullwidth?: boolean;
   items: string[];
+  autoCompleteValue: string;
+  inputValue: string;
+  placeholder?: string;
+  noOptionsLabel?: string;
+  onAutocompleteChanged: (value: string) => void;
+  onTextChanged: (value: string) => void;
 }
 
 const InputAutocompleteForm: React.FC<IProps> = (props) => {
   const {
     items,
-    value,
+    inputValue,
+    autoCompleteValue,
     fullwidth,
-    handleTextChanged,
-    handleTextExternalChanged,
+    placeholder,
+    noOptionsLabel,
+    onAutocompleteChanged,
+    onTextChanged,
   } = props;
 
-  const autocompleteChanged = React.useCallback(
+  console.log("input:", inputValue, autoCompleteValue);
+  const handleAutocompleteChanged = React.useCallback(
     (e: React.SyntheticEvent<Element, Event>, selected: string | null) => {
-      handleTextExternalChanged(selected ?? value);
+      if (selected != null) onAutocompleteChanged(selected);
     },
-    [value, handleTextExternalChanged]
+    [onAutocompleteChanged]
+  );
+
+  const handleTextChanged = React.useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      onTextChanged(e.currentTarget.value as string);
+    },
+    [onTextChanged]
   );
 
   return (
@@ -35,21 +51,23 @@ const InputAutocompleteForm: React.FC<IProps> = (props) => {
       }}
     >
       <Autocomplete
+        defaultValue={null}
         fullWidth={fullwidth}
-        disablePortal
-        noOptionsText="-"
-        value={value}
         options={items}
-        onChange={autocompleteChanged}
+        getOptionLabel={(item) => item}
+        noOptionsText={noOptionsLabel ?? "-"}
+        id="auto-complete"
+        value={autoCompleteValue || null}
+        onChange={handleAutocompleteChanged}
         renderInput={(params) => (
-          <InputTextField
-            {...props}
-            inputPropsBase={params.inputProps}
-            inputProps={params.InputProps}
-            fullwidth={params.fullWidth}
-            readonly={params.disabled}
-            value={value}
-            handleTextChanged={handleTextChanged}
+          <TextField
+            fullWidth={fullwidth}
+            variant="standard"
+            inputProps={params.inputProps}
+            InputProps={params.InputProps}
+            value={inputValue}
+            onChange={handleTextChanged}
+            placeholder={placeholder}
           />
         )}
       />

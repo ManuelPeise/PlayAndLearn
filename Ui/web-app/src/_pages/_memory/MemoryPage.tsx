@@ -1,11 +1,8 @@
 import React from "react";
 import { Grid } from "@mui/material";
 import GenericGameSettingsBar from "../../_components/_settings/GenericGameSettingsBar";
-import { GameTypeEnum } from "../../_lib/_enums/GameTypeEnum";
 import Loadingindicator from "../../_components/_loading/LoadingIndicator";
 import { UseMemory } from "../../_hooks/useMemory";
-import { getGameConfiguration } from "../../_lib/_utils/GameConfigurationHandler";
-import { IGameSettings } from "../../_lib/_intefaces/IGameSettings";
 import { useGameSettingsValidation } from "../../_hooks/useGameSettingsValidation";
 import { useTranslation } from "react-i18next";
 import PageLayout from "../PageLayout";
@@ -13,29 +10,13 @@ import MemoryGameContainer from "./MemoryGameContainer";
 
 const MemoryPage: React.FC = () => {
   const validator = useGameSettingsValidation();
-  const configuration = getGameConfiguration(GameTypeEnum.Memory);
-  const [settings, setSettings] = React.useState<IGameSettings>({
-    topicId: configuration.defaultTopicId,
-    level: configuration.defaultLevel,
-    isRunning: false,
-  });
 
   const { t } = useTranslation();
-  const handler = UseMemory(settings, validator);
-
-  const handleSettingsChanged = React.useCallback(
-    (settings: IGameSettings) => {
-      setSettings(settings);
-      validator.validate(settings, GameTypeEnum.Memory);
-    },
-    [validator]
-  );
+  const handler = UseMemory(validator);
 
   const pageTitle = React.useMemo(() => {
-    return `${t("memory:memoryPageTitle")}${
-      handler.gameData.topic !== undefined ? `- ${handler.gameData.topic}` : ""
-    }`;
-  }, [t, handler.gameData.topic]);
+    return t("memory:memoryPageTitle");
+  }, [t]);
 
   return (
     <PageLayout
@@ -44,19 +25,21 @@ const MemoryPage: React.FC = () => {
         <Grid container style={{ display: "flex", justifyContent: "center" }}>
           <Loadingindicator isLoading={handler.isLoading} />
           <GenericGameSettingsBar
-            settings={settings}
-            config={configuration}
+            settings={handler.settings}
+            config={handler.pageData.gameConfiguration}
             marginTop={2}
             targetUrl="/memory/gameupload"
-            topics={handler.topics}
-            levels={handler.levels}
-            handleSettingsChanged={handleSettingsChanged}
+            pageData={handler.pageData}
+            handleSettingsChanged={handler.handleSettingsChanged}
           />
 
           <MemoryGameContainer
-            settings={settings}
+            settings={handler.settings}
             isLoading={handler.isLoading}
-            handleSettingsChanged={handleSettingsChanged}
+            isValid={handler.validSettings}
+            gameData={handler.gameData}
+            onStartGame={handler.onStartGame}
+            handleSettingsChanged={handler.handleSettingsChanged}
             handleIsloadingChanged={handler.handleIsloadingChanged}
           />
         </Grid>

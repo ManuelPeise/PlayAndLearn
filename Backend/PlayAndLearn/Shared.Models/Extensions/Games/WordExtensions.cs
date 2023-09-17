@@ -12,7 +12,8 @@ namespace Shared.Models.Extensions.Games
             {
                 Key = entity.Id,
                 Value = entity.Value,
-                LevelType = entity.LevelType,
+                LevelType = entity.Level,
+                GameType = entity.GameType,
             };
         }
 
@@ -20,8 +21,9 @@ namespace Shared.Models.Extensions.Games
         {
             return new WordEntity
             {
-                LevelType = model.LevelType,
+                Level = model.LevelType,
                 Value = model.Value,
+                GameType = model.GameType,
             };
         }
     }

@@ -13,9 +13,7 @@ export const useGameSettingsValidation = (): IGameSettingsValidationResult => {
   const validateMemorySettings = React.useCallback(
     (settings: IGameSettings) => {
       setIsValid(
-        settings.level !== undefined &&
-          settings.topicId !== undefined &&
-          settings.topicId !== 0
+        settings.level !== 0 && settings.player !== 0 // && settings.topic !== 0
       );
     },
     []

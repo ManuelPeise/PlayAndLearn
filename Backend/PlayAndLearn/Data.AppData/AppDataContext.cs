@@ -7,7 +7,10 @@ namespace Data.AppData
     {
         public DbSet<GameTopicEntity> GameTopics { get; set; }
         public DbSet<WordEntity> Words { get; set; }
-        public DbSet<MemoryCardEntity> MemoryCards { get; set; }
+        public DbSet<GameSettingsEntity> GameSettings { get; set; }
+        public DbSet<LogMessageEntity> LogMessages { get; set; }
+        public DbSet<FileStorageEntity> FileStorage { get; set; }
+
         public AppDataContext(DbContextOptions options): base(options) { }
     }
 }

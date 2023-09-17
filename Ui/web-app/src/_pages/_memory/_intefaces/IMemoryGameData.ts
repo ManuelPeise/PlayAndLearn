@@ -11,3 +11,9 @@ export interface IMemoryGameData {
   error: string;
   topic?: string;
 }
+
+export interface IGameDataResponse {
+  gameId: string;
+  error: string;
+  cards: IMemoryCard[];
+}

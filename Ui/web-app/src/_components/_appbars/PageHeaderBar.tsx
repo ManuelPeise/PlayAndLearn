@@ -27,6 +27,7 @@ const PageHeader: React.FC<IProps> = (props) => {
     false,
     0,
     availableLanguages,
+    [],
     undefined,
     "#ffffff",
     onLanguageChange

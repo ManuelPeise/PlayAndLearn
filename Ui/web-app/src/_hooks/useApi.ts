@@ -45,8 +45,6 @@ export function UseApi<T = unknown>(
           if (cancelRequest.current) return;
 
           dispatch({ type: "fetched", payload: responseData });
-
-          IsLoadingCallback(false);
         }
       } catch (error) {
         IsLoadingCallback(false);
@@ -54,6 +52,8 @@ export function UseApi<T = unknown>(
         if (cancelRequest.current) return;
 
         dispatch({ type: "error", payload: error as Error });
+      } finally {
+        IsLoadingCallback(false);
       }
     },
     [IsLoadingCallback]

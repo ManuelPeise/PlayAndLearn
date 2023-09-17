@@ -2,9 +2,9 @@ using BusinessLogic.Games;
 using BusinessLogic.Shared;
 using BusinessLogic.Shared.Interfaces;
 using Data.AppData;
+using Microsoft.AspNetCore.Http.Features;
 using Microsoft.EntityFrameworkCore;
-using Shared.Models.Entities;
-using System.Runtime.CompilerServices;
+
 
 var corsPolicy = "CorsPolicy";
 
@@ -33,11 +33,16 @@ builder.Services.AddDbContext<AppDataContext>(options =>
 
 // builder.Services.AddScoped<IGenericDbContextAccessor<EntityBase>, GenericDbContextAccessor<EntityBase>>();
 builder.Services.AddScoped<IGameHandlerFactory, GameHandlerFactory>();
-
+builder.Services.AddScoped<ILogRepository, LogRepository>();
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+builder.Services.Configure<FormOptions>(options =>
+{
+    options.MultipartBodyLengthLimit = 268435456;
+});
 
 var app = builder.Build();
 
@@ -50,7 +55,7 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
-app.UseHttpsRedirection();
+//app.UseHttpsRedirection();
 
 app.UseAuthorization();
 
