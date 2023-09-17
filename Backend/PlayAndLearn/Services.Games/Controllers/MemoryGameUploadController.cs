@@ -54,5 +54,54 @@ namespace Services.Games.Controllers
 
             }
         }
+
+        [HttpGet(Name = "GetInitialSate")]
+        public async Task<GameSettings> GetInitialSate()
+        {
+            using (var handler = _gameHandlerFactory.GetGameHandler(_logRepository, GameTypeEnum.Memory, _appDataContext))
+            {
+                var memoryHandler = (MemoryGameHandler)handler;
+                return await memoryHandler.GetInitializeSettingsState();
+
+            }
+        }
+
+        [HttpGet("{topic}", Name = "GetMemorySettings")]
+        public async Task<GameSettings> GetMemorySettings(string topic)
+        {
+            using (var handler = _gameHandlerFactory.GetGameHandler(_logRepository, GameTypeEnum.Memory, _appDataContext))
+            {
+                var memoryHandler = (MemoryGameHandler)handler;
+                return await memoryHandler.GetGameSettings(topic);
+
+            }
+        }
+        [HttpGet(Name = "GetWordlistTemplate")]
+        public async Task<FileContentResult?> GetWordlistTemplate()
+        {
+            using (var handler = _gameHandlerFactory.GetGameHandler(_logRepository, GameTypeEnum.Memory, _appDataContext))
+            {
+                try
+                {
+                    var memoryHandler = (MemoryGameHandler)handler;
+
+                    var fileDownloadData = await memoryHandler.GetWordlistFileStream();
+
+                    var content = fileDownloadData.Stream.ToArray();
+
+                    if (content != null)
+                    {
+                        return File(content, "binary/octet-stream", "MemoryWordList_{topic}.txt");
+                    }
+
+                }
+                catch (Exception ex)
+                {
+                    var msg = ex.Message;
+
+                }
+                return null;
+            }
+        }
     }
 }

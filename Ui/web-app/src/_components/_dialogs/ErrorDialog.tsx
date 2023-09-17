@@ -21,7 +21,7 @@ const ErrorDialog: React.FC<IProps> = (props) => {
 
   const errorText = React.useMemo(() => {
     return t(`memory:${errorTextKey}`);
-  }, [errorTextKey]);
+  }, [errorTextKey, t]);
 
   return (
     <Dialog keepMounted open={open}>

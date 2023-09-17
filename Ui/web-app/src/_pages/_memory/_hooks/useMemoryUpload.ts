@@ -24,7 +24,6 @@ interface IGameSettingsRequestModel {
   hasTopicSelection: boolean;
 }
 
-const memorySettingsServiceEndpoint = `${process.env.REACT_APP_API_URL}MemorySettingsPage/`;
 const memoryGameUploadController = `${process.env.REACT_APP_API_URL}MemoryGameUpload/`;
 
 export const useMemoryUpload = (
@@ -51,7 +50,7 @@ export const useMemoryUpload = (
   } = {
     settingsApi: UseApi<IMemorySettings>(
       handleIsLoading,
-      `${memorySettingsServiceEndpoint}GetInitialSate`,
+      `${memoryGameUploadController}GetInitialSate`,
       "",
       {
         method: "GET",
@@ -138,7 +137,7 @@ export const useMemoryUpload = (
       }
 
       await settingsApi.fetchData(
-        `${memorySettingsServiceEndpoint}GetMemorySettings/${value}`,
+        `${memoryGameUploadController}GetMemorySettings/${value}`,
         "",
         { method: "GET", mode: "cors" }
       );
@@ -200,7 +199,7 @@ export const useMemoryUpload = (
   const handleDownloadWordListTemplate =
     React.useCallback(async (): Promise<void> => {
       await templateFileDownloadApi.downLoadFile(
-        `${memorySettingsServiceEndpoint}GetWordlistTemplate`,
+        `${memoryGameUploadController}GetWordlistTemplate`,
         {
           method: "GET",
           mode: "cors",
