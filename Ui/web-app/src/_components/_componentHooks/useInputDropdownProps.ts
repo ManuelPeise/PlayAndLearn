@@ -6,6 +6,7 @@ export interface IInputDropdownProps {
   fullWidth?: boolean;
   readOnly?: boolean;
   selectedKey: number;
+  disabledItems: number[];
   items: IDropdownItem[];
   color?: string;
   toolTip?: string;
@@ -17,6 +18,7 @@ export const useInputDropdownProps = (
   fullWidth: boolean,
   selectedKey: number,
   items: IDropdownItem[],
+  disabledItems: number[],
   toolTip?: string,
   color?: string,
   callBack?: (value: number) => void
@@ -26,7 +28,6 @@ export const useInputDropdownProps = (
   const handleChange = React.useCallback(
     (event: SelectChangeEvent) => {
       setValue(parseInt(event.target.value as string));
-      console.log(event.target.value);
       if (callBack !== undefined) {
         callBack(parseInt(event.target.value));
       }
@@ -38,6 +39,7 @@ export const useInputDropdownProps = (
     readOnly,
     fullWidth,
     selectedKey: value,
+    disabledItems,
     items,
     color,
     toolTip,

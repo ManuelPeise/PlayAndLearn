@@ -23,6 +23,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\BusinessLogic.Games\BusinessLogic.Games.csproj" />
+    <ProjectReference Include="..\BusinessLogic.Import\BusinessLogic.Import.csproj" />
     <ProjectReference Include="..\BusinessLogic.Shared\BusinessLogic.Shared.csproj" />
     <ProjectReference Include="..\Data.AppData\Data.AppData.csproj" />
     <ProjectReference Include="..\Services.Games\Services.Games.csproj" />

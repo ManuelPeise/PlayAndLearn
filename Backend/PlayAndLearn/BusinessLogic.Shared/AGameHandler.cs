@@ -1,10 +1,8 @@
-﻿
-
-using Data.AppData;
+﻿using Data.AppData;
 using Shared.Games.Models;
 using Shared.Models;
 using Shared.Models.Enums.Games;
-using Shared.Models.Extensions.Games;
+
 using Shared.Models.Games;
 
 namespace BusinessLogic.Shared
@@ -20,16 +18,39 @@ namespace BusinessLogic.Shared
 
         public abstract Task<AGameSettingsBarData> GetSettingsBarData();
 
-        public abstract Task<MemoryGameData> GetGameData(MemoryGameDataRequestModel requestModel);
+        public abstract Task<MemoryPageData> GetGameData(MemoryGameDataRequestModel requestModel);
 
         public abstract Task<MemoryPageData> GetPageData();
-        public List<KeyValueItem> GetLevelTypeItems()
+        public List<KeyValueItem> GetLevelDropdownItems()
         {
             return new List<KeyValueItem>
             {
-                new KeyValueItem {Key = (int)GameLevelTypeEnum.Easy, Value = "Leicht"},
-                new KeyValueItem {Key = (int)GameLevelTypeEnum.Medium, Value = "Mittel"},
-                new KeyValueItem {Key = (int)GameLevelTypeEnum.Hard, Value = "Schwer"},
+                new KeyValueItem {Key = 0, Value = "select"},
+                new KeyValueItem {Key = 1, Value = "easy"},
+                new KeyValueItem {Key = 2, Value = "medium"},
+                new KeyValueItem {Key = 3, Value = "hard"},
+            };
+        }
+
+        public List<KeyValueItem> GetPlayerDropdownItems()
+        {
+            return new List<KeyValueItem>
+            {
+                new KeyValueItem
+                {
+                    Key = 0,
+                    Value = "select"
+                },
+                new KeyValueItem
+                {
+                    Key = 1,
+                    Value = "playerOne"
+                },
+                new KeyValueItem
+                {
+                    Key = 2,
+                    Value = "playerTwo"
+                }
             };
         }
 

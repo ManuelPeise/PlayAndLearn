@@ -11,17 +11,19 @@ namespace Services.Games.Controllers
     {
         private readonly IGameHandlerFactory _gameHandlerFactory;
         private readonly AppDataContext _appDataContext;
+        private readonly ILogRepository _logRepository;
 
-        public GameSettingsController(IGameHandlerFactory gameHandlerFactory, AppDataContext appDataContext)
+        public GameSettingsController(IGameHandlerFactory gameHandlerFactory, AppDataContext appDataContext, ILogRepository logRepository)
         {
             _gameHandlerFactory = gameHandlerFactory;
             _appDataContext = appDataContext;
+            _logRepository = logRepository;
         }
 
         [HttpGet(Name = "GetSettings")]
         public async Task<AGameSettingsBarData> GetSettings(GameTypeEnum gameType)
         {
-            using (var handler = _gameHandlerFactory.GetGameHandler(gameType, _appDataContext))
+            using (var handler = _gameHandlerFactory.GetGameHandler(_logRepository, gameType, _appDataContext))
             {
                 return await handler.GetSettingsBarData();
             }

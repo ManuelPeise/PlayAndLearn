@@ -12,8 +12,7 @@ export interface IUseInputTextfieldProps {
   icon?: JSX.Element;
   inputPropsBase?: React.InputHTMLAttributes<HTMLInputElement>;
   inputProps?: Partial<InputBaseProps>;
-  handleTextChanged: (e: React.ChangeEvent<HTMLInputElement>) => void;
-  handleTextExternalChanged: (value: string) => void;
+  handleTextChanged: (value: string) => void;
 }
 
 export const useInputTextFieldProps = (
@@ -28,14 +27,7 @@ export const useInputTextFieldProps = (
 ): IUseInputTextfieldProps => {
   const [value, setValue] = React.useState<string>(defaultValue);
 
-  const handleTextChanged = React.useCallback(
-    (e: React.ChangeEvent<HTMLInputElement>) => {
-      setValue(e.currentTarget.value as string);
-    },
-    []
-  );
-
-  const handleTextExternalChanged = React.useCallback((value: string) => {
+  const handleTextChanged = React.useCallback((value: string) => {
     setValue(value);
   }, []);
 
@@ -49,6 +41,5 @@ export const useInputTextFieldProps = (
     iconPosition,
     icon,
     handleTextChanged,
-    handleTextExternalChanged,
   };
 };

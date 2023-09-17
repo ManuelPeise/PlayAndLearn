@@ -5,6 +5,6 @@ namespace BusinessLogic.Shared.Interfaces
 {
     public interface IGameHandlerFactory
     {
-        AGameHandler GetGameHandler(GameTypeEnum gameType, AppDataContext appDataContext);
+        AGameHandler GetGameHandler(ILogRepository _logRepository, GameTypeEnum gameType, AppDataContext appDataContext);
     }
 }

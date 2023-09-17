@@ -5,7 +5,8 @@ namespace Shared.Games.Models
 {
     public class MemorySettingsBarData: AGameSettingsBarData
     {
-        public List<KeyValueItem> GameLevelTypeItems { get; set; } = new List<KeyValueItem>();
-        public List<KeyValueItem> GameTopics { get; set; } = new List<KeyValueItem>();
+        public List<KeyValueItem> LevelDropdownItems { get; set; } = new List<KeyValueItem>();
+        public List<KeyValueItem> TopicDropdownItems { get; set; } = new List<KeyValueItem>();
+        public List<KeyValueItem> PlayerDropdownItems { get; set; } = new List<KeyValueItem>();
     }
 }

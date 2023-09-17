@@ -6,7 +6,7 @@ interface IProps extends IUseInputTextfieldProps {
   hasIcon?: boolean;
   iconPosition?: "start" | "end";
   icon?: JSX.Element;
-  handleTextChanged: (e: React.ChangeEvent<HTMLInputElement>) => void;
+  // handleTextChanged: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
 const InputTextField: React.FC<IProps> = (props) => {
@@ -23,6 +23,13 @@ const InputTextField: React.FC<IProps> = (props) => {
     inputPropsBase,
     handleTextChanged,
   } = props;
+
+  const handleChange = React.useCallback(
+    (e: React.ChangeEvent<HTMLInputElement>) => {
+      handleTextChanged(e.currentTarget.value as string);
+    },
+    [handleTextChanged]
+  );
 
   return (
     <Box
@@ -54,7 +61,7 @@ const InputTextField: React.FC<IProps> = (props) => {
             ),
           }
         }
-        onChange={handleTextChanged}
+        onChange={handleChange}
       />
     </Box>
   );

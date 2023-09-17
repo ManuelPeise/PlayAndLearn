@@ -9,6 +9,7 @@ const InputDropdown: React.FC<IProps> = (props) => {
     readOnly,
     items,
     selectedKey,
+    disabledItems,
     fullWidth,
     color,
     toolTip,
@@ -57,7 +58,9 @@ const InputDropdown: React.FC<IProps> = (props) => {
                 <MenuItem
                   key={item.key}
                   value={item.key}
-                  disabled={item.disabled}
+                  disabled={
+                    disabledItems.includes(item.key) || selectedKey === item.key
+                  }
                   selected={item.key === selectedKey}
                 >
                   {item.value}
@@ -96,7 +99,9 @@ const InputDropdown: React.FC<IProps> = (props) => {
               <MenuItem
                 key={item.key}
                 value={item.key}
-                disabled={item.disabled}
+                disabled={
+                  disabledItems.includes(item.key) || selectedKey === item.key
+                }
                 selected={item.key === selectedKey}
               >
                 {item.value}

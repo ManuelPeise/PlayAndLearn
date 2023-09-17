@@ -5,5 +5,22 @@
   "skill": "Level",
   "addGame": "Add Game",
   "selectedFiles": "{0} of {1} Dateien ausgewählt",
-  "select": "select"
+  "select": "Select",
+  "easy": "Easy",
+  "medium": "Medium",
+  "hard": "Hard",
+  "player": "Player",
+  "playerOne": "One Player",
+  "playerTwo": "Two Player",
+  "importWordListKey": "Upload a word list.",
+  "importMemoryCardsKey": "Upload memory cards.",
+  "gameDataLoadingError": "Oops, something went wrong here!",
+  "cardUploadKey": "Select your memory cards.",
+  "levelselectionKey": "Has a drop down to select a level.",
+  "pageTitleKey": "Page Title",
+  "playerselectionKey": "Has a drop down to select a player mode.",
+  "topicKey": "Topic",
+  "topicSelectionKey": "Has a drop down to select a topic.",
+  "uploadButtonKey": "Select File",
+  "wordListFileUploadKey": "Select your word list."
 }

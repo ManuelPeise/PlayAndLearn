@@ -5,6 +5,7 @@ namespace Shared.Models.Entities
     public class WordEntity: EntityBase
     {
         public string Value { get; set; } = string.Empty;
-        public GameLevelTypeEnum LevelType { get; set; }
+        public int Level { get; set; }
+        public GameTypeEnum GameType { get; set; }
     }
 }

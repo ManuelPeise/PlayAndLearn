@@ -12,12 +12,12 @@ namespace BusinessLogic.Games
 
         }
 
-        public AGameHandler GetGameHandler(GameTypeEnum gameType, AppDataContext appDataContext)
+        public AGameHandler GetGameHandler(ILogRepository logRepository, GameTypeEnum gameType, AppDataContext appDataContext)
         {
             switch (gameType)
             {
                 case GameTypeEnum.Memory:
-                    return new MemoryGameHandler(appDataContext);
+                    return new MemoryGameHandler(logRepository, appDataContext);
                 default: 
                     throw new NotImplementedException();
             }
