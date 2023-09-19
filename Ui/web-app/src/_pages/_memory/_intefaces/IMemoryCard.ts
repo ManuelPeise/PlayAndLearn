@@ -1,7 +1,6 @@
-import { Blob } from "buffer";
-
 export interface IMemoryCard {
+  key: number;
   id: number;
-  foreGround: string;
-  selected: boolean;
+  foreground: string;
+  background: string;
 }

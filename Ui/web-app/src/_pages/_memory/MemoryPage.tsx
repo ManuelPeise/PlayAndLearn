@@ -5,6 +5,7 @@ import PageLayout from "../PageLayout";
 import useMemoryGame from "./_hooks/useMemoryGame";
 import GenericGameSettingsBar from "src/_components/_settings/GenericGameSettingsBar";
 import Loadingindicator from "src/_components/_loading/LoadingIndicator";
+import MemoryGameContainer from "./MemoryGameContainer";
 
 const MemoryPage: React.FC = () => {
   // const validator = useGameSettingsValidation();
@@ -15,43 +16,41 @@ const MemoryPage: React.FC = () => {
     return t("memory:memoryPageTitle");
   }, [t]);
 
-  const { isLoading, contextData, handleGameConfigurationChanged } =
-    useMemoryGame();
+  const {
+    isLoading,
+    contextData,
+    gameIsRunning,
+    memoryCards,
+    loadingIndicatorkey,
+    handleStartGame,
+    handleGameConfigurationChanged,
+  } = useMemoryGame();
 
-  const [index, setIndex] = React.useState<number>(0);
+  // const [index, setIndex] = React.useState<number>(0);
 
-  const handleIndexChanged = React.useCallback(() => {
-    console.log(contextData?.cards);
-    if (
-      contextData?.cards !== undefined &&
-      index < contextData?.cards?.length - 1
-    ) {
-      const newIndex = index + 1;
-      setIndex(newIndex);
-    } else {
-      setIndex(0);
-    }
+  // const imgSrc = React.useMemo(() => {
+  //   if (
+  //     contextData?.cards[index] !== undefined &&
+  //     contextData?.cards[index]?.buffer?.length > 0
+  //   ) {
+  //     const src = `data:image/jpeg;base64,${contextData.cards[index].buffer}`;
 
-    console.log("index", index);
-  }, [contextData?.cards, index]);
+  //     return src;
+  //   }
 
-  const imgSrc = React.useMemo(() => {
-    if (
-      contextData?.cards[index] !== undefined &&
-      contextData?.cards[index]?.buffer?.length > 0
-    ) {
-      const src = `data:image/jpeg;base64,${contextData.cards[index].buffer}`;
-
-      return src;
-    }
-
-    return "";
-  }, [contextData, index]);
+  //   return "";
+  // }, [contextData, index]);
 
   if (contextData == null) {
     return null;
   }
-
+  // {
+  //   /* <img
+  //           src={imgSrc}
+  //           style={{ width: 400, height: 400 }}
+  //           alt="TestCard"
+  //         /> */
+  // }
   return (
     <PageLayout
       pageTitle={pageTitle}
@@ -59,29 +58,25 @@ const MemoryPage: React.FC = () => {
         <Grid container style={{ display: "flex", justifyContent: "center" }}>
           <Loadingindicator isLoading={isLoading} />
           <GenericGameSettingsBar
+            readonly={isLoading || gameIsRunning}
             marginTop={2}
             targetUrl="/memory/gameupload"
             contextData={contextData}
             handleGameConfigurationChanged={handleGameConfigurationChanged}
           />
-
-          <img
-            src={imgSrc}
-            style={{ width: 400, height: 400 }}
-            alt="TestCard"
-          />
-          <div style={{ display: "flex", justifyContent: "center" }}>
-            <button onClick={handleIndexChanged}>Click Me!</button>
-          </div>
-          {/* <MemoryGameContainer
-              settings={handler.settings}
-              isLoading={isLoading}
-              isValid={handler.validSettings}
-              gameData={handler.gameData}
-              onStartGame={handler.onStartGame}
-              handleSettingsChanged={handler.handleSettingsChanged}
-              handleIsloadingChanged={handleIsLoadingChanged}
-            /> */}
+          {!gameIsRunning && (
+            <div style={{ display: "flex", justifyContent: "center" }}>
+              <button disabled={isLoading} onClick={handleStartGame}>
+                Start!
+              </button>
+            </div>
+          )}
+          {gameIsRunning && (
+            <div>
+              <label>{loadingIndicatorkey}</label>
+            </div>
+          )}
+          <MemoryGameContainer isLoading={isLoading} cards={memoryCards} />
         </Grid>
       }
     />

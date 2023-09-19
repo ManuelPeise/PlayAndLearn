@@ -13,14 +13,20 @@ interface IProps {
   marginTop?: number;
   targetUrl: string;
   contextData: IMemoryGameContextData;
+  readonly: boolean;
   handleGameConfigurationChanged: (
     gameConfiguration: IGameConfiguration
   ) => Promise<void>;
 }
 
 const GenericGameSettingsBar: React.FC<IProps> = (props) => {
-  const { marginTop, targetUrl, contextData, handleGameConfigurationChanged } =
-    props;
+  const {
+    marginTop,
+    targetUrl,
+    contextData,
+    readonly,
+    handleGameConfigurationChanged,
+  } = props;
 
   const { t } = useTranslation();
 
@@ -80,8 +86,8 @@ const GenericGameSettingsBar: React.FC<IProps> = (props) => {
   const buttonProps = useInputButtonProps(
     "button",
     addGame,
-    false,
-    "text",
+    readonly,
+    "outlined",
     () => {}
   );
 
@@ -119,6 +125,7 @@ const GenericGameSettingsBar: React.FC<IProps> = (props) => {
             spacing={1}
             children={
               <InputDropdown
+                readOnly={readonly}
                 toolTip={topicLabel}
                 selectedKey={contextData.gameConfiguration.selectedTopic}
                 items={contextData.topicItems}
@@ -133,6 +140,7 @@ const GenericGameSettingsBar: React.FC<IProps> = (props) => {
             spacing={1}
             children={
               <InputDropdown
+                readOnly={readonly}
                 toolTip={skillLabel}
                 selectedKey={contextData.gameConfiguration.selectedLevel}
                 items={contextData.levelItems}
@@ -148,6 +156,7 @@ const GenericGameSettingsBar: React.FC<IProps> = (props) => {
             spacing={1}
             children={
               <InputDropdown
+                readOnly={readonly}
                 toolTip={playerLabel}
                 selectedKey={contextData.gameConfiguration.selectedPlayer}
                 items={contextData.playerItems}
