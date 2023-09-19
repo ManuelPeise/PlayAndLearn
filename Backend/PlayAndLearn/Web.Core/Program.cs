@@ -26,6 +26,7 @@ builder.Services.AddCors(opt =>
 
 builder.Services.AddDbContext<AppDataContext>(options =>
 {
+
     var connection = builder.Configuration.GetConnectionString("AppDataContext");
 
     options.UseMySQL(connection);

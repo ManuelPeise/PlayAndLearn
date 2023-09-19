@@ -2,8 +2,8 @@
 using Data.AppData;
 using Microsoft.AspNetCore.Mvc;
 using Services.Shared;
-using Shared.Games.Models;
 using Shared.Models.Enums.Games;
+using Shared.Models.Games;
 
 namespace Services.Games.Controllers
 {
@@ -21,7 +21,7 @@ namespace Services.Games.Controllers
         }
 
         [HttpGet(Name = "GetSettings")]
-        public async Task<AGameSettingsBarData> GetSettings(GameTypeEnum gameType)
+        public async Task<ASettingsBarData> GetSettings(GameTypeEnum gameType)
         {
             using (var handler = _gameHandlerFactory.GetGameHandler(_logRepository, gameType, _appDataContext))
             {

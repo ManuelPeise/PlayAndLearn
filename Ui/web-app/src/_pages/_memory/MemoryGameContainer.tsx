@@ -1,6 +1,5 @@
 import React from "react";
 import Grid from "@mui/material/Grid";
-import { IGameSettings } from "../../_lib/_intefaces/IGameSettings";
 import { useInputButtonProps } from "src/_components/_componentHooks/useInputButtonProps";
 import InputButton from "src/_components/_input/InputButton";
 import background from "./_backgrounds/memory_background_abc.jpg";
@@ -9,26 +8,28 @@ import { IMemoryCardRow } from "./_intefaces/IMemoryCardRow";
 import { Container } from "@mui/material";
 import { IGameDataResponse } from "./_intefaces/IMemoryGameData";
 import ErrorDialog from "src/_components/_dialogs/ErrorDialog";
+import { IGameConfiguration } from "src/_lib/_intefaces/IGameConfiguration";
 
 interface IProps {
-  settings: IGameSettings;
+  configuration: IGameConfiguration;
   isLoading: boolean;
   isValid: boolean;
   gameData: IGameDataResponse;
-  handleSettingsChanged: (settings: IGameSettings) => void;
+  handleConfigurationChanged: (configuration: IGameConfiguration) => void;
   handleIsloadingChanged: (isloading: boolean) => void;
   onStartGame: () => Promise<boolean>;
 }
 
 const MemoryGameContainer: React.FC<IProps> = (props) => {
   // eslint-disable-next-line
-  const { settings, gameData, handleSettingsChanged, onStartGame } = props;
+  const { configuration, gameData, handleConfigurationChanged, onStartGame } =
+    props;
 
   const handleClick = React.useCallback(async () => {
     if (await onStartGame()) {
-      handleSettingsChanged({ ...settings, isRunning: true });
+      handleConfigurationChanged({ ...configuration, isRunning: true });
     }
-  }, [settings, onStartGame, handleSettingsChanged]);
+  }, [configuration, onStartGame, handleConfigurationChanged]);
 
   const startGameButtonProps = useInputButtonProps(
     "button",
@@ -92,7 +93,7 @@ const MemoryGameContainer: React.FC<IProps> = (props) => {
       </Grid>
       {/* )} */}
       <Grid item xs={12}>
-        {!settings.isRunning && <InputButton {...startGameButtonProps} />}
+        {!configuration.isRunning && <InputButton {...startGameButtonProps} />}
       </Grid>
       {gameData !== undefined && gameData != null && (
         <ErrorDialog

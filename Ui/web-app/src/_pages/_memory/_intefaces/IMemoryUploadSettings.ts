@@ -7,6 +7,6 @@ export interface IMemoryUploadSettings {
   hasPlayerSelection: boolean;
   hasLevelSelection: boolean;
   hasTopicSelection: boolean;
-  topics: IKeyValueItem[];
+  topicItems: IKeyValueItem[];
   files: IMemoryFileMapping[];
 }

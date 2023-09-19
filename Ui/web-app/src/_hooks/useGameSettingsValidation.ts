@@ -1,36 +1,39 @@
 import React from "react";
-import { IGameSettings } from "../_lib/_intefaces/IGameSettings";
 import { GameTypeEnum } from "../_lib/_enums/GameTypeEnum";
+import { IGameConfiguration } from "src/_lib/_intefaces/IGameConfiguration";
 
-export interface IGameSettingsValidationResult {
+export interface IGameConfigurationValidationResult {
   isValid: boolean;
-  validate: (settings: IGameSettings, gameType: GameTypeEnum) => void;
+  validate: (configuration: IGameConfiguration, gameType: GameTypeEnum) => void;
 }
 
-export const useGameSettingsValidation = (): IGameSettingsValidationResult => {
-  const [isValid, setIsValid] = React.useState<boolean>(false);
+export const useGameConfigurationValidation =
+  (): IGameConfigurationValidationResult => {
+    const [isValid, setIsValid] = React.useState<boolean>(false);
 
-  const validateMemorySettings = React.useCallback(
-    (settings: IGameSettings) => {
-      setIsValid(
-        settings.level !== 0 && settings.player !== 0 // && settings.topic !== 0
-      );
-    },
-    []
-  );
+    const validateMemoryConfiguration = React.useCallback(
+      (configuration: IGameConfiguration) => {
+        setIsValid(
+          configuration.selectedLevel !== 0 &&
+            configuration.selectedPlayer !== 0 &&
+            configuration.selectedTopic !== 0
+        );
+      },
+      []
+    );
 
-  const validate = React.useCallback(
-    (settings: IGameSettings, gameType: GameTypeEnum) => {
-      switch (gameType) {
-        case GameTypeEnum.Memory:
-          validateMemorySettings(settings);
-      }
-    },
-    [validateMemorySettings]
-  );
+    const validate = React.useCallback(
+      (configuration: IGameConfiguration, gameType: GameTypeEnum) => {
+        switch (gameType) {
+          case GameTypeEnum.Memory:
+            validateMemoryConfiguration(configuration);
+        }
+      },
+      [validateMemoryConfiguration]
+    );
 
-  return {
-    isValid,
-    validate,
+    return {
+      isValid,
+      validate,
+    };
   };
-};

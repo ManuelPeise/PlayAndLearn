@@ -12,5 +12,15 @@ namespace Data.AppData
         public DbSet<FileStorageEntity> FileStorage { get; set; }
 
         public AppDataContext(DbContextOptions options): base(options) { }
+
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            //modelBuilder.Entity<FileStorageEntity>(entity =>
+            //{
+            //    entity.Property(x => x.Content).HasColumnType("longblob");
+            //});
+
+            base.OnModelCreating(modelBuilder);
+        }
     }
 }

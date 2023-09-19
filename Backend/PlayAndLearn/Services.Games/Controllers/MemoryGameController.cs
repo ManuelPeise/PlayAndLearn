@@ -4,12 +4,9 @@ using Data.AppData;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
 using Services.Shared;
-using Services.Shared.Authorization;
-using Shared.Games.Models;
 using Shared.Models;
 using Shared.Models.Enums.Games;
-using Shared.Models.Games;
-
+using Shared.Models.Games.Memory;
 
 namespace Services.Games.Controllers
 {
@@ -25,71 +22,67 @@ namespace Services.Games.Controllers
             _logRepository = logRepository;
         }
 
-        [HttpGet(Name = "GetPageData")]
-        public async Task<MemoryPageData> GetPageData()
-        {
-            using (var handler = _gameHandlerFactory.GetGameHandler(_logRepository, GameTypeEnum.Memory, _appDataContext))
-            {
-                var memoryHandler = (MemoryGameHandler)handler;
-                return await memoryHandler.GetPageData();
+        //[HttpGet(Name = "GetMemoryGamePageData")]
+        //public async Task<MemoryGameContextData> GetMemoryGamePageData()
+        //{
+        //    using (var handler = _gameHandlerFactory.GetGameHandler(_logRepository, GameTypeEnum.Memory, _appDataContext))
+        //    {
+        //        var memoryHandler = (MemoryGameHandler)handler;
+        //        return await memoryHandler.GetMemoryPageData();
+        //    }
+        //}
 
-            }
-        }
-
-        //[ApiKey(ApiKey ="", ModuleKey = "")]
-        [HttpPost(Name = "GetGameData")]
-        public async Task<MemoryPageData> GetGameData()
+        [HttpPost(Name = "GetMemoryGamePageData")]
+        public async Task<MemoryGameContextData?> GetMemoryGamePageData()
         {
             using (var reader = new StreamReader(Request.Body))
             using (var handler = _gameHandlerFactory.GetGameHandler(_logRepository, GameTypeEnum.Memory, _appDataContext))
             {
                 var body = await reader.ReadToEndAsync();
 
-                var model = JsonConvert.DeserializeObject<MemoryGameDataRequestModel>(body);
+                var requestModel = JsonConvert.DeserializeObject<MemoryGameDataRequestModel>(body);
 
                 var memoryHandler = (MemoryGameHandler)handler;
-                return await memoryHandler.GetGameData(model);
+                return await memoryHandler.GetMemoryPageData(requestModel);
+
             }
         }
 
-        [HttpGet(Name = "GetTopics")]
-        public async Task<List<KeyValueItem>> GetTopics(string gameType)
-        {
-            var type = (GameTypeEnum)Enum.Parse(typeof(GameTypeEnum), gameType);
+        ////[ApiKey(ApiKey ="", ModuleKey = "")]
+        //[HttpPost(Name = "GetGameData")]
+        //public async Task<MemoryGamePageData> GetGameData()
+        //{
+        //    using (var reader = new StreamReader(Request.Body))
+        //    using (var handler = _gameHandlerFactory.GetGameHandler(_logRepository, GameTypeEnum.Memory, _appDataContext))
+        //    {
+        //        var body = await reader.ReadToEndAsync();
 
-            using (var handler = _gameHandlerFactory.GetGameHandler(_logRepository, type, _appDataContext))
-            {
-                if (type == GameTypeEnum.Memory)
-                {
-                    var memoryHandler = (MemoryGameHandler)handler;
+        //        var model = JsonConvert.DeserializeObject<MemoryGameDataRequestModel>(body);
 
-                    return await memoryHandler.GetTopicDropdownItems();
+        //        var memoryHandler = (MemoryGameHandler)handler;
+        //        return await memoryHandler.GetGameData(model);
+        //    }
+        //}
 
-                }
+        //[HttpGet(Name = "GetTopics")]
+        //public async Task<List<KeyValueItem>> GetTopics(string gameType)
+        //{
+        //    var type = (GameTypeEnum)Enum.Parse(typeof(GameTypeEnum), gameType);
 
-                return new List<KeyValueItem>();
-            }
-        }
+        //    using (var handler = _gameHandlerFactory.GetGameHandler(_logRepository, type, _appDataContext))
+        //    {
+        //        if (type == GameTypeEnum.Memory)
+        //        {
+        //            var memoryHandler = (MemoryGameHandler)handler;
 
-        [HttpGet(Name = "GetFile")]
-        public async Task<FileStreamResult> GetFile()
-        {
-            var filePath = Path.Combine(Path.GetTempPath(), "testfile.csv");
+        //            return await memoryHandler.GetTopicDropdownItems();
 
-            if (System.IO.File.Exists(filePath))
-            {
-                System.IO.File.Delete(filePath);
-            }
+        //        }
 
-            var stream = System.IO.File.Create(filePath);
+        //        return new List<KeyValueItem>();
+        //    }
+        //}
 
-            if (stream != null)
-            {
-                return File(stream, "application/octet-stream", "Ttestfile.csv");
-            }
-
-
-            return null;
-        }
+     
     }
 }

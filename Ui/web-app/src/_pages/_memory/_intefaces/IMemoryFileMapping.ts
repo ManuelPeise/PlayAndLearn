@@ -9,4 +9,5 @@ export interface IMemoryFileMapping {
   fileName: string;
   topic: string;
   color: "blue" | "lightblue" | "green" | "pink";
+  buffer: string;
 }

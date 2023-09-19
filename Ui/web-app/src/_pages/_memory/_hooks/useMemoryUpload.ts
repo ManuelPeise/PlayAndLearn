@@ -151,6 +151,17 @@ export const useMemoryUpload = (
     [settings, onSettingsChanged]
   );
 
+  const dataURItoBlob = React.useCallback((dataURI: string) => {
+    var byteString = atob(dataURI.split(",")[1]);
+    var ab = new ArrayBuffer(byteString.length);
+    var ia = new Uint8Array(ab);
+    for (var i = 0; i < byteString.length; i++) {
+      ia[i] = byteString.charCodeAt(i);
+    }
+    var bb = new Blob([ab]);
+    return bb;
+  }, []);
+
   const handleSelectFiles = React.useCallback(
     async (e: React.ChangeEvent<HTMLInputElement>) => {
       handleIsLoading(true);
@@ -162,6 +173,8 @@ export const useMemoryUpload = (
           const file = e.target.files.item(i);
 
           if (file !== null && isAcceptedFile(file.name)) {
+            const buffer: Blob = new Blob([file]);
+            console.log(buffer);
             mappings.push({
               key: i,
               file: file,
@@ -169,6 +182,7 @@ export const useMemoryUpload = (
               fileType: getFileType(file.name),
               topic: settings.topic,
               color: getColor(getFileType(file.name)),
+              buffer: "",
             });
           }
         }
@@ -189,6 +203,7 @@ export const useMemoryUpload = (
       getFileType,
       handleIsLoading,
       isAcceptedFile,
+      dataURItoBlob,
     ]
   );
 

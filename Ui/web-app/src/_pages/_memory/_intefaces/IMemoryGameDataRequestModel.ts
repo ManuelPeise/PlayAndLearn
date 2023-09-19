@@ -5,4 +5,5 @@ export interface IMemoryGameDataRequestModel {
   selectedLevel: number;
   selectedTopic: number;
   selectedPlayer: number;
+  isInitialLoad: boolean;
 }
