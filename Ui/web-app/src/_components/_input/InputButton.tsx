@@ -4,6 +4,7 @@ import { Box, Button } from "@mui/material";
 
 interface IProps extends IInputButtonProps {
   buttonWidth?: string;
+  marginTop?: number;
 }
 
 const InputButton: React.FC<IProps> = (props) => {
@@ -14,6 +15,7 @@ const InputButton: React.FC<IProps> = (props) => {
     readonly,
     children,
     buttonWidth,
+    marginTop,
     handleClick,
   } = props;
 
@@ -26,6 +28,7 @@ const InputButton: React.FC<IProps> = (props) => {
         alignItems: "center",
         minWidth: "1.5rem",
         minHeight: "1.5rem",
+        marginTop: `${marginTop}rem`,
       }}
     >
       <Button

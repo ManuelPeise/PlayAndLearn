@@ -162,6 +162,8 @@ export const useMemoryUpload = (
           const file = e.target.files.item(i);
 
           if (file !== null && isAcceptedFile(file.name)) {
+            const buffer: Blob = new Blob([file]);
+            console.log(buffer);
             mappings.push({
               key: i,
               file: file,
@@ -169,6 +171,7 @@ export const useMemoryUpload = (
               fileType: getFileType(file.name),
               topic: settings.topic,
               color: getColor(getFileType(file.name)),
+              buffer: "",
             });
           }
         }
@@ -179,7 +182,6 @@ export const useMemoryUpload = (
       }
       onSettingsChanged({ ...settings, files: mappings });
 
-      console.log("Settings:", settings);
       handleIsLoading(false);
     },
     [

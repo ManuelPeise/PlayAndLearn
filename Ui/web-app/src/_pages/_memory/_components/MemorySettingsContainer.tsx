@@ -83,7 +83,7 @@ const MemorySettingsContainer: React.FC = () => {
   const topicItems = React.useMemo(() => {
     const topics: string[] = [];
 
-    settings.topics?.forEach((topic) => {
+    settings.topicItems?.forEach((topic) => {
       topics.push(topic.value);
     });
 

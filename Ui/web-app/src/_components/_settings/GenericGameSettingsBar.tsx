@@ -1,33 +1,49 @@
-import { Grid } from "@mui/material";
+import { Grid, SelectChangeEvent } from "@mui/material";
 import React from "react";
-import { IGameConfiguration } from "../../_lib/_intefaces/IGameSettingsConfiguration";
-import { IGameSettings } from "../../_lib/_intefaces/IGameSettings";
 import { useTranslation } from "react-i18next";
 import { NavLink } from "react-router-dom";
-import { useInputDropdownProps } from "../_componentHooks/useInputDropdownProps";
 import InputDropdown from "../_input/InputDropDown";
 import { useInputButtonProps } from "../_componentHooks/useInputButtonProps";
 import InputButton from "../_input/InputButton";
 import InputComponentWrapper from "../_input/InputComponentWrapper";
-import { IMemoryPageGameData } from "src/_pages/_memory/_intefaces/IMemoryPageGameData";
+import { IGameConfiguration } from "src/_lib/_intefaces/IGameConfiguration";
+import { IKeyValueItem } from "src/_lib/_intefaces/IKeyValueItem";
 
 interface IProps {
-  settings: IGameSettings;
-  config: IGameConfiguration;
   marginTop?: number;
   targetUrl: string;
-  pageData: IMemoryPageGameData;
-  handleSettingsChanged: (settings: IGameSettings) => void;
+  selectedTopic?: number;
+  hasTopicDropDown?: boolean;
+  hasLevelDropDown?: boolean;
+  hasPlayerDropDown?: boolean;
+  topics?: IKeyValueItem[];
+  selectedLevel?: number;
+  levels?: IKeyValueItem[];
+  players: IKeyValueItem[];
+  selectedPlayer: number;
+  gameConfiguration: IGameConfiguration;
+  readonly: boolean;
+  handleGameConfigurationChanged: (
+    gameConfiguration: IGameConfiguration
+  ) => Promise<void>;
 }
 
 const GenericGameSettingsBar: React.FC<IProps> = (props) => {
   const {
-    settings,
-    config,
     marginTop,
     targetUrl,
-    pageData,
-    handleSettingsChanged,
+    readonly,
+    hasLevelDropDown,
+    hasPlayerDropDown,
+    hasTopicDropDown,
+    topics,
+    selectedTopic,
+    levels,
+    selectedLevel,
+    players,
+    selectedPlayer,
+    gameConfiguration,
+    handleGameConfigurationChanged,
   } = props;
 
   const { t } = useTranslation();
@@ -49,132 +65,143 @@ const GenericGameSettingsBar: React.FC<IProps> = (props) => {
   }, [t]);
 
   const levelCallBack = React.useCallback(
-    (value: any) => {
-      handleSettingsChanged({ ...settings, level: value });
+    async (e: SelectChangeEvent) => {
+      const gameConfig: IGameConfiguration = {
+        ...gameConfiguration,
+        selectedLevel: parseInt(e.target.value),
+      };
+
+      await handleGameConfigurationChanged(gameConfig);
     },
-    [settings, handleSettingsChanged]
+    [gameConfiguration, handleGameConfigurationChanged]
   );
 
   const topicCallBack = React.useCallback(
-    (value: any) => {
-      handleSettingsChanged({ ...settings, topic: value });
+    async (e: SelectChangeEvent) => {
+      const gameConfig: IGameConfiguration = {
+        ...gameConfiguration,
+        selectedTopic: parseInt(e.target.value),
+      };
+
+      await handleGameConfigurationChanged(gameConfig);
     },
-    [settings, handleSettingsChanged]
+    [gameConfiguration, handleGameConfigurationChanged]
   );
 
   const playerCallBack = React.useCallback(
-    (value: any) => {
-      handleSettingsChanged({ ...settings, player: value });
+    async (e: SelectChangeEvent) => {
+      const gameConfig: IGameConfiguration = {
+        ...gameConfiguration,
+        selectedPlayer: parseInt(e.target.value),
+      };
+
+      await handleGameConfigurationChanged(gameConfig);
     },
-    [settings, handleSettingsChanged]
+    [gameConfiguration, handleGameConfigurationChanged]
   );
 
-  const topicDropdownProps = useInputDropdownProps(
-    false,
-    false,
-    settings.topic,
-    pageData.topicDropdownItems,
-    [0],
-    topicLabel,
-    undefined,
-    topicCallBack
-  );
+  const topicItems = React.useMemo((): IKeyValueItem[] => {
+    const items: IKeyValueItem[] = [];
+    topics?.forEach((topic) => {
+      items.push({ key: topic.key, value: t(`memory:${topic.value}`) });
+    });
 
-  const levelDropdownProps = useInputDropdownProps(
-    false,
-    false,
-    settings.level,
-    pageData.levelDropdownItems,
-    [0],
-    skillLabel,
-    undefined,
-    levelCallBack
-  );
+    return items;
+  }, [topics, t]);
 
-  const playerDropdownProps = useInputDropdownProps(
-    false,
-    false,
-    settings.player,
-    pageData.playerDropdownItems,
-    [0],
-    playerLabel,
-    undefined,
-    playerCallBack
-  );
+  const levelItems = React.useMemo((): IKeyValueItem[] => {
+    const items: IKeyValueItem[] = [];
+    levels?.forEach((level) => {
+      items.push({ key: level.key, value: t(`memory:${level.value}`) });
+    });
+
+    return items;
+  }, [levels, t]);
+
+  const playerItems = React.useMemo((): IKeyValueItem[] => {
+    const items: IKeyValueItem[] = [];
+    players?.forEach((player) => {
+      items.push({ key: player.key, value: t(`memory:${player.value}`) });
+    });
+
+    return items;
+  }, [players, t]);
 
   const buttonProps = useInputButtonProps(
     "button",
     addGame,
-    false,
-    "text",
+    readonly,
+    "outlined",
     () => {}
   );
 
   return (
     <Grid
       container
-      spacing={1}
+      spacing={0}
+      className="game-settings-bar"
       style={{
-        display: "flex",
-        justifyContent: "center",
-        alignContent: "space-around",
-        margin: "16px",
         marginTop: marginTop,
-        padding: "2px",
-        backgroundColor: "lightblue",
-        opacity: ".8",
-        borderRadius: "8px",
       }}
     >
-      <Grid
-        item
-        xs={12}
-        md={6}
-        xl={6}
-        style={{
-          height: "6rem",
-          display: "flex",
-          alignItems: "center",
-          flexDirection: "row",
-          justifyContent: "center",
-        }}
-      >
-        {config.hasTopicSelection && (
+      <Grid item xs={12} className="game-settings-bar-items-container">
+        {hasTopicDropDown && (
           <InputComponentWrapper
-            spacing={1}
-            children={<InputDropdown {...topicDropdownProps} />}
+            className="game-settings-bar-item-wrapper"
+            children={
+              <InputDropdown
+                readOnly={readonly}
+                toolTip={topicLabel}
+                selectedKey={selectedTopic ?? 0}
+                items={topicItems}
+                disabledItems={[0]}
+                handleChange={topicCallBack}
+              />
+            }
           />
         )}
-        {config.hasLevelSelection && (
+        {hasLevelDropDown && (
           <InputComponentWrapper
-            spacing={1}
-            children={<InputDropdown {...levelDropdownProps} />}
+            className="game-settings-bar-item-wrapper"
+            children={
+              <InputDropdown
+                readOnly={readonly}
+                toolTip={skillLabel}
+                selectedKey={selectedLevel ?? 0}
+                items={levelItems}
+                disabledItems={[0]}
+                handleChange={levelCallBack}
+              />
+            }
           />
         )}
-
-        {config.hasPlayerSelection && (
+        {hasPlayerDropDown && (
           <InputComponentWrapper
-            spacing={1}
-            children={<InputDropdown {...playerDropdownProps} />}
+            className="game-settings-bar-item-wrapper"
+            children={
+              <InputDropdown
+                readOnly={readonly}
+                toolTip={playerLabel}
+                selectedKey={selectedPlayer}
+                items={playerItems}
+                disabledItems={[0]}
+                handleChange={playerCallBack}
+              />
+            }
           />
         )}
-      </Grid>
-      <Grid
-        item
-        xs={12}
-        md={6}
-        xl={6}
-        style={{
-          height: "6rem",
-          display: "flex",
-          alignItems: "center",
-          flexDirection: "row",
-          justifyContent: "center",
-        }}
-      >
-        <NavLink style={{ textDecoration: "none" }} to={targetUrl}>
-          <InputButton {...buttonProps} />
-        </NavLink>
+        <InputComponentWrapper
+          className="game-settings-bar-item-wrapper"
+          children={
+            <NavLink
+              className="settings-bar-nav-link"
+              style={{ textDecoration: "none" }}
+              to={targetUrl}
+            >
+              <InputButton {...buttonProps} />
+            </NavLink>
+          }
+        />
       </Grid>
     </Grid>
   );

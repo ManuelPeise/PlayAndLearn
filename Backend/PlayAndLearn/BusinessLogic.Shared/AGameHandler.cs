@@ -1,34 +1,70 @@
-﻿using Data.AppData;
-using Shared.Games.Models;
+﻿using BusinessLogic.Shared.Interfaces;
+using Data.AppData;
 using Shared.Models;
+using Shared.Models.Entities;
 using Shared.Models.Enums.Games;
-
 using Shared.Models.Games;
+using Shared.Models.Games.Memory;
 
 namespace BusinessLogic.Shared
 {
     public abstract class AGameHandler: IDisposable
     {
         public readonly AppDataContext AppDataContext;
-
-        public AGameHandler(AppDataContext appDataContext)
+        private IGenericDbContextAccessor<GameTopicEntity> _gameTopicAccessor;
+        private ILogRepository _logRepository;
+        public AGameHandler(AppDataContext appDataContext, ILogRepository logRepository)
         {
             AppDataContext = appDataContext;
+            _gameTopicAccessor = new GenericDbContextAccessor<GameTopicEntity>(appDataContext);
+            _logRepository = logRepository;
         }
 
-        public abstract Task<AGameSettingsBarData> GetSettingsBarData();
+        public abstract Task<ASettingsBarData> GetSettingsBarData();
 
-        public abstract Task<MemoryPageData> GetGameData(MemoryGameDataRequestModel requestModel);
+        public async Task<List<KeyValueItem>> GetTopicDropdownItems(GameTypeEnum gameType)
+        {
+            try
+            {
+                var topics = await _gameTopicAccessor.GetEntitiesAsync(x => x.GameType == gameType);
 
-        public abstract Task<MemoryPageData> GetPageData();
+                var topicDropdownItems = new List<KeyValueItem> { new KeyValueItem { Key = 0, Value = "labelSelect" } };
+                topicDropdownItems.AddRange(from topic in topics
+                                            select new KeyValueItem
+                                            {
+                                                Key = topic.Id,
+                                                Value = topic.TopicName
+                                            });
+
+                return topicDropdownItems;
+            }
+            catch (Exception exception)
+            {
+                var msgKey = Guid.NewGuid();
+
+                var logMessage = new LogMessageEntity
+                {
+                    Key = msgKey,
+                    Message = "Loading dropdown items failed!",
+                    ExMessage = exception.Message,
+                    Stacktrace = exception.StackTrace ?? string.Empty,
+                    Module = "Memory",
+                    TimeStamp = DateTime.UtcNow
+                };
+
+                await _logRepository.AddLogMessage(logMessage);
+
+                return new List<KeyValueItem>();
+            }
+        }
         public List<KeyValueItem> GetLevelDropdownItems()
         {
             return new List<KeyValueItem>
             {
-                new KeyValueItem {Key = 0, Value = "select"},
-                new KeyValueItem {Key = 1, Value = "easy"},
-                new KeyValueItem {Key = 2, Value = "medium"},
-                new KeyValueItem {Key = 3, Value = "hard"},
+                new KeyValueItem {Key = 0, Value = "labelSelect"},
+                new KeyValueItem {Key = 1, Value = "labelEasy"},
+                new KeyValueItem {Key = 2, Value = "labelMedium"},
+                new KeyValueItem {Key = 3, Value = "labelHard"},
             };
         }
 
@@ -39,17 +75,17 @@ namespace BusinessLogic.Shared
                 new KeyValueItem
                 {
                     Key = 0,
-                    Value = "select"
+                    Value = "labelSelect"
                 },
                 new KeyValueItem
                 {
                     Key = 1,
-                    Value = "playerOne"
+                    Value = "labelPlayerOne"
                 },
                 new KeyValueItem
                 {
                     Key = 2,
-                    Value = "playerTwo"
+                    Value = "labelPlayerTwo"
                 }
             };
         }

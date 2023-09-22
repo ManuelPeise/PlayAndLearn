@@ -2,15 +2,15 @@
 using BusinessLogic.Shared.Interfaces;
 using Data.AppData;
 using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Http.Internal;
-using Shared.Games.Models;
 using Shared.Models;
 using Shared.Models.Entities;
 using Shared.Models.Enums.Games;
 using Shared.Models.Export;
 using Shared.Models.Games;
+using Shared.Models.Games.Memory;
 using System.Reflection;
 using System.Text;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace BusinessLogic.Games
 {
@@ -21,30 +21,24 @@ namespace BusinessLogic.Games
         private IGenericDbContextAccessor<FileStorageEntity> _fileStorageAccessor;
         private ILogRepository _logRepository;
 
-        public MemoryGameHandler(ILogRepository logRepository, AppDataContext appDataContext) : base(appDataContext)
+        public MemoryGameHandler(ILogRepository logRepository, AppDataContext appDataContext) : base(appDataContext, logRepository)
         {
             _gameTopicAccessor = new GenericDbContextAccessor<GameTopicEntity>(appDataContext);
             _gameSettingsAccessor = new GenericDbContextAccessor<GameSettingsEntity>(appDataContext);
             _fileStorageAccessor = new GenericDbContextAccessor<FileStorageEntity>(appDataContext);
-
             _logRepository = logRepository;
         }
 
-        public override async Task<MemoryPageData> GetGameData(MemoryGameDataRequestModel requestModel)
-        {
-            return null;
-        }
-
-        public override async Task<AGameSettingsBarData> GetSettingsBarData()
+        public override async Task<ASettingsBarData> GetSettingsBarData()
         {
             try
             {
                 return new MemorySettingsBarData
                 {
-                    Title = "Memory",
+                    TitleKey = "memoryPageTitle",
                     LevelDropdownItems = GetLevelDropdownItems(),
                     PlayerDropdownItems = GetPlayerDropdownItems(),
-                    TopicDropdownItems = await GetTopicDropdownItems()
+                    TopicDropdownItems = await GetTopicDropdownItems(GameTypeEnum.Memory)
                 };
             }
             catch (Exception exception)
@@ -65,26 +59,27 @@ namespace BusinessLogic.Games
 
                 return new MemorySettingsBarData
                 {
-                    Title = "Memory",
+                    TitleKey = "memoryPageTitle",
                 };
             }
         }
-
-        public async Task<GameSettings> GetInitializeSettingsState()
+        public async Task<MemoryGameSettings> GetInitializeSettingsState()
         {
-            return new GameSettings
+            return new MemoryGameSettings
             {
-                Files = new List<FileMapping>(),
+                Files = new List<MemoryFileMapping>(),
                 HasLevelSelection = false,
                 HasPlayerSelection = false,
                 HasTopicSelection = true,
                 Topic = string.Empty,
                 TopicFallbackValue = string.Empty,
-                Topics = await GetTopicDropdownItems()
+                TopicItems = await GetTopicDropdownItems(GameTypeEnum.Memory),
+                LevelItems = GetLevelDropdownItems(),
+                PlayerItems = GetPlayerDropdownItems()
+
             };
         }
-
-        public async Task<GameSettings> GetGameSettings(string topicName)
+        public async Task<MemoryGameSettings> GetGameSettings(string topicName)
         {
             try
             {
@@ -95,15 +90,17 @@ namespace BusinessLogic.Games
                     var settings = await _gameSettingsAccessor.GetEntityAsync(x => x.TopicId == topicId);
                     var files = await _fileStorageAccessor.GetEntitiesAsync(x => x.Module == FileModuls.MemoryFileModules.Module && x.Topic == topicName);
 
-                    return new GameSettings
+                    return new MemoryGameSettings
                     {
                         HasLevelSelection = settings.HasLevelSelection,
                         HasPlayerSelection = settings.HasPlayerSelection,
                         HasTopicSelection = settings.HasTopicSelection,
                         Topic = topicName,
                         TopicFallbackValue = topicName,
-                        Topics = await GetSettingsDropdownTopicItems(),
-                        Files = files.Any() ? GetCardFileMappings(files).ToList() : new List<FileMapping>(),
+                        TopicItems = await GetSettingsDropdownTopicItems(),
+                        PlayerItems = GetPlayerDropdownItems(),
+                        LevelItems = GetLevelDropdownItems(),
+                        Files = files.Any() ? GetCardFileMappings(files).ToList() : new List<MemoryFileMapping>(),
 
                     };
                 }
@@ -129,7 +126,6 @@ namespace BusinessLogic.Games
                 return await GetInitializeSettingsState();
             }
         }
-
         public async Task<bool> SaveFile(HttpRequest request)
         {
             try
@@ -148,7 +144,7 @@ namespace BusinessLogic.Games
                     using (var stream = new MemoryStream())
                     {
                         await file.CopyToAsync(stream);
-                        stream.Seek(0, SeekOrigin.Begin);
+
                         var size = stream.Length;
                         var rawData = stream.GetBuffer();
 
@@ -188,9 +184,8 @@ namespace BusinessLogic.Games
 
                 return false;
             }
-            return true;
         }
-        public async Task<bool> SaveOrUpdateGameSettings(GameSettingsRequestModel requestModel)
+        public async Task<bool> SaveOrUpdateGameSettings(MemoryGameSettingsRequestModel requestModel)
         {
             var result = false;
 
@@ -231,93 +226,52 @@ namespace BusinessLogic.Games
                 return false;
             }
         }
-
-        private async Task<List<KeyValueItem>> GetSettingsDropdownTopicItems()
+        public async Task<MemoryGameContextData> GetMemoryPageData()
         {
-            try
+            return new MemoryGameContextData
             {
-                var items = await GetTopicDropdownItems();
-
-                return items.Skip(1).ToList();
-            }
-            catch (Exception exception)
-            {
-                var msgKey = Guid.NewGuid();
-
-                var logMessage = new LogMessageEntity
+                GameConfiguration = new MemoryGameConfiguration
                 {
-                    Key = msgKey,
-                    Message = "Loading settings dropdown items failed!",
-                    ExMessage = exception.Message,
-                    Stacktrace = exception.StackTrace ?? string.Empty,
-                    Module = "Memory",
-                    TimeStamp = DateTime.UtcNow
-                };
+                    SelectedLevel = 0,
+                    SelectedPlayer = 0,
+                    SelectedTopic = 0,
+                    GameType = GameTypeEnum.Memory,
+                    HasLevelSelection = false,
+                    HasPlayerSelection = false,
+                    HasTopicSelection = true,
+                    Topic = "",
 
-                await _logRepository.AddLogMessage(logMessage);
+                },
+                TopicItems = await GetTopicDropdownItems(GameTypeEnum.Memory),
+                LevelItems = GetLevelDropdownItems(),
+                PlayerItems = GetPlayerDropdownItems(),
 
-                return new List<KeyValueItem>();
-            }
+            };
         }
-
-        public async Task<List<KeyValueItem>> GetTopicDropdownItems()
+        public async Task<MemoryGameContextData?> GetMemoryPageData(MemoryGameDataRequestModel requestModel)
         {
             try
             {
-                var topics = await _gameTopicAccessor.GetEntitiesAsync(x => x.GameType == GameTypeEnum.Memory);
-
-                var topicDropdownItems = new List<KeyValueItem> { new KeyValueItem { Key = 0, Value = "select" } };
-                topicDropdownItems.AddRange(from topic in topics
-                                            select new KeyValueItem
-                                            {
-                                                Key = topic.Id,
-                                                Value = topic.TopicName
-                                            });
-
-                return topicDropdownItems;
-            }
-            catch (Exception exception)
-            {
-                var msgKey = Guid.NewGuid();
-
-                var logMessage = new LogMessageEntity
+                return new MemoryGameContextData
                 {
-                    Key = msgKey,
-                    Message = "Loading dropdown items failed!",
-                    ExMessage = exception.Message,
-                    Stacktrace = exception.StackTrace ?? string.Empty,
-                    Module = "Memory",
-                    TimeStamp = DateTime.UtcNow
-                };
-
-                await _logRepository.AddLogMessage(logMessage);
-
-                return new List<KeyValueItem>();
-            }
-        }
-
-        public override async Task<MemoryPageData> GetPageData()
-        {
-            try
-            {
-                return new MemoryPageData
-                {
-                    TopicDropdownItems = await GetTopicDropdownItems(),
-                    PlayerDropdownItems = GetPlayerDropdownItems(),
-                    LevelDropdownItems = GetLevelDropdownItems(),
-                    GameConfiguration = new GameConfigurationModel
+                    GameConfiguration = new MemoryGameConfiguration
                     {
-                        Topic = 0,
-                        DefaultLevel = 0,
-                        DefaultPlayer = 0,
-                        DefaultTopic = 0,
-                        GameType = 0,
-                        HasLevelSelection = true,
-                        HasPlayerSelection = true,
+                        SelectedTopic = requestModel.SelectedTopic,
+                        SelectedLevel = requestModel.SelectedLevel,
+                        SelectedPlayer = requestModel.SelectedPlayer,
+                        GameType = GameTypeEnum.Memory,
+                        HasLevelSelection = requestModel.IsInitialLoad ? false : true,
+                        HasPlayerSelection = requestModel.IsInitialLoad ? false : false,
                         HasTopicSelection = true,
+                        Topic = "",
 
-                    }
+                    },
+                    TopicItems = await GetTopicDropdownItems(GameTypeEnum.Memory),
+                    LevelItems = GetLevelDropdownItems(),
+                    PlayerItems = GetPlayerDropdownItems(),
+                    Cards = await GetCards(requestModel.SelectedTopic)
                 };
+
             }
             catch (Exception exception)
             {
@@ -326,7 +280,7 @@ namespace BusinessLogic.Games
                 var logMessage = new LogMessageEntity
                 {
                     Key = msgKey,
-                    Message = "Loading memory page data failed!",
+                    Message = "Get memory page data failed!",
                     ExMessage = exception.Message,
                     Stacktrace = exception.StackTrace ?? string.Empty,
                     Module = "Memory",
@@ -335,10 +289,10 @@ namespace BusinessLogic.Games
 
                 await _logRepository.AddLogMessage(logMessage);
 
-                return new MemoryPageData();
+                return null;
             }
         }
-        
+
         public async Task<FileDownload?> GetWordlistFileStream()
         {
             var resource = Properties.Resources.MemoryWordList;
@@ -370,38 +324,6 @@ namespace BusinessLogic.Games
 
             }
         }
-
-        private List<FileMapping> GetCardFileMappings(List<FileStorageEntity> cards)
-        {
-            var mappings = new List<FileMapping>();
-
-            if (!cards.Any())
-            {
-                return mappings;
-            }
-
-            foreach (var card in cards)
-            {
-                if (card.Content.Length > 0)
-                {
-                    var mapping = new FileMapping
-                    {
-                        Key = card.Id,
-                        Topic = card.Topic,
-
-                        FileName = card.FileName,
-                        FileType = card.FileType,
-                        IsActive = true,
-                        Buffer = Encoding.ASCII.GetBytes(card.Content)
-                    };
-
-                    mappings.Add(mapping);
-                }
-            }
-
-            return mappings;
-        }
-
         private async Task<int> GetTopicId(string topicName)
         {
             var topic = await _gameTopicAccessor.GetEntityAsync(x => x.TopicName == topicName);
@@ -413,13 +335,11 @@ namespace BusinessLogic.Games
 
             return topic.Id;
         }
-
         private async Task<bool> TrySaveTopic(string topicName)
         {
             return await _gameTopicAccessor.AddAsync(new GameTopicEntity { GameType = GameTypeEnum.Memory, TopicName = topicName }, x => x.TopicName == topicName) == 1;
         }
-
-        private async Task<bool> TrySaveGameSettings(GameSettingsRequestModel model, int topicId)
+        private async Task<bool> TrySaveGameSettings(MemoryGameSettingsRequestModel model, int topicId)
         {
             var gameSettings = new GameSettingsEntity
             {
@@ -432,40 +352,137 @@ namespace BusinessLogic.Games
 
             return await _gameSettingsAccessor.AddAsync(gameSettings, s => s.TopicId == topicId) == 1;
         }
-
-        private async Task<byte[]?> TryGetFileContent(IFormFile file)
+        private async Task<List<KeyValueItem>> GetSettingsDropdownTopicItems()
         {
-            using (var stream = new MemoryStream())
+            try
             {
-                var content = new byte[0];
+                var items = await GetTopicDropdownItems(GameTypeEnum.Memory);
 
-                await file.CopyToAsync(stream);
+                return items.Skip(1).ToList();
+            }
+            catch (Exception exception)
+            {
+                var msgKey = Guid.NewGuid();
 
-                var isBufferCreated = stream.TryGetBuffer(out var buffer);
-
-                if (isBufferCreated)
+                var logMessage = new LogMessageEntity
                 {
-                    content = buffer.ToArray();
-                    return content;
-                }
+                    Key = msgKey,
+                    Message = "Loading settings dropdown items failed!",
+                    ExMessage = exception.Message,
+                    Stacktrace = exception.StackTrace ?? string.Empty,
+                    Module = "Memory",
+                    TimeStamp = DateTime.UtcNow
+                };
 
-                return null;
+                await _logRepository.AddLogMessage(logMessage);
+
+                return new List<KeyValueItem>();
             }
         }
 
-        private int GetWordLevel(string word)
+        private List<MemoryFileMapping> GetFileMappingsToExport(List<MemoryFileMapping> cards, int cardsCount)
         {
-            if (word.Length <= 5)
+            var availableCardIds = cards.Select(x => x.Key).ToList();
+
+            var cardIds = new List<int>();
+
+            var maxCards = Math.Min(availableCardIds.Count, cardsCount);
+
+            var random = new Random();
+
+            do
             {
-                return 1;
+                var randomNumber = random.Next(1, availableCardIds.Count - 1);
+
+                if (!cardIds.Contains(randomNumber))
+                {
+                    cardIds.Add(randomNumber);
+                }
+
+            } while (cardIds.Count > maxCards);
+
+            return cards.Where(x => cardIds.Contains(x.Key)).ToList();
+        }
+
+        private List<MemoryFileMapping> GetCardFileMappings(List<FileStorageEntity> cards)
+        {
+            var mappings = new List<MemoryFileMapping>();
+
+            if (!cards.Any())
+            {
+                return mappings;
             }
 
-            if (word.Length < 10)
+            foreach (var card in cards)
             {
-                return 2;
+                var mapping = new MemoryFileMapping
+                {
+                    Key = card.Id,
+                    Topic = card.Topic,
+                    FileName = card.FileName,
+                    FileType = card.FileType,
+                    IsActive = true,
+                    Buffer = card.Content,
+                };
+
+                mappings.Add(mapping);
+
             }
 
-            return 3;
+
+
+            return mappings;
+        }
+
+        private async Task<List<MemoryFileMapping>> GetCards(int topicId)
+        {
+            try
+            {
+                var topic = await _gameTopicAccessor.GetEntityAsync(topic => topic.Id == topicId);
+
+                if (topic == null)
+                {
+                    throw new Exception($"Could not load cards for topic: [{topicId}].");
+                }
+
+                var files = await _fileStorageAccessor.GetEntitiesAsync(x => x.Topic == topic.TopicName);
+
+                if (!files.Any())
+                {
+                    throw new Exception($"Could not load cards for topic: [{topic.TopicName}].");
+                }
+
+                return GetCardFileMappings(files);
+            }
+            catch (Exception exception)
+            {
+                var msgKey = Guid.NewGuid();
+
+                var logMessage = new LogMessageEntity
+                {
+                    Key = msgKey,
+                    Message = "Loading memory cards faild!",
+                    ExMessage = exception.Message,
+                    Stacktrace = exception.StackTrace ?? string.Empty,
+                    Module = "Memory",
+                    TimeStamp = DateTime.UtcNow
+                };
+
+                await _logRepository.AddLogMessage(logMessage);
+
+                return new List<MemoryFileMapping>();
+            }
+
+        }
+
+        private byte[] FileToByteArray(IFormFile file)
+        {
+            using (var ms = new MemoryStream())
+            {
+                file.CopyTo(ms);
+                return ms.ToArray();
+            }
+
         }
 
     }

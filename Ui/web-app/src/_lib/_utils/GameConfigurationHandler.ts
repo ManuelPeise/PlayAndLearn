@@ -3,3 +3,7 @@ export const getRandomIndex = (arrayLength: number): number => {
 
   return randomIndex;
 };
+
+export const getFileSrcFromBase64 = (src: string) => {
+  return `data:image/jpeg;base64,${src}`;
+};

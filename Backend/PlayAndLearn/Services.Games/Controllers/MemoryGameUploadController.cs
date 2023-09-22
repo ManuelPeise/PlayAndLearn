@@ -8,7 +8,7 @@ using Newtonsoft.Json;
 using Services.Shared;
 using Shared.Models.Enums.Games;
 using Shared.Models.Games;
-
+using Shared.Models.Games.Memory;
 
 namespace Services.Games.Controllers
 {
@@ -37,7 +37,7 @@ namespace Services.Games.Controllers
             {
                 var body = await reader.ReadToEndAsync();
 
-                var model = JsonConvert.DeserializeObject<GameSettingsRequestModel>(body);
+                var model = JsonConvert.DeserializeObject<MemoryGameSettingsRequestModel>(body);
 
                 var memoryHandler = (MemoryGameHandler)handler;
                 return await memoryHandler.SaveOrUpdateGameSettings(model);
@@ -56,7 +56,7 @@ namespace Services.Games.Controllers
         }
 
         [HttpGet(Name = "GetInitialSate")]
-        public async Task<GameSettings> GetInitialSate()
+        public async Task<MemoryGameSettings> GetInitialSate()
         {
             using (var handler = _gameHandlerFactory.GetGameHandler(_logRepository, GameTypeEnum.Memory, _appDataContext))
             {
@@ -67,7 +67,7 @@ namespace Services.Games.Controllers
         }
 
         [HttpGet("{topic}", Name = "GetMemorySettings")]
-        public async Task<GameSettings> GetMemorySettings(string topic)
+        public async Task<MemoryGameSettings> GetMemorySettings(string topic)
         {
             using (var handler = _gameHandlerFactory.GetGameHandler(_logRepository, GameTypeEnum.Memory, _appDataContext))
             {

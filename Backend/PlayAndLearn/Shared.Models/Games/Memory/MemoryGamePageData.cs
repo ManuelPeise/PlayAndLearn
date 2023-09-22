@@ -1,14 +1,19 @@
-﻿using Shared.Models;
-using Shared.Models.Games;
-
-namespace Shared.Games.Models
+﻿using System;
+namespace Shared.Models.Games.Memory
 {
-    public class MemoryPageData
+    public class MemoryGamePageData
     {
         public List<KeyValueItem> TopicDropdownItems { get; set; } = new List<KeyValueItem>();
         public List<KeyValueItem> LevelDropdownItems { get; set; } = new List<KeyValueItem>();
         public List<KeyValueItem> PlayerDropdownItems { get; set; } = new List<KeyValueItem>();
-        public GameConfigurationModel GameConfiguration { get; set; }
+        public MemoryGameConfiguration GameConfiguration { get; set; } = new MemoryGameConfiguration();
         public MemoryGameData GameData { get; set; }
+    }
+
+
+    public class MemoryGameData
+    {
+        public Guid GameId { get; set; }
+        public string Error { get; set; } = string.Empty;
     }
 }

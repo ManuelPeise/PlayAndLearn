@@ -1,0 +1,42 @@
+.game-settings-bar {
+  margin: 4px;
+  border-radius: 8px;
+  background-color: lightblue;
+}
+
+.game-settings-bar-items-container {
+  position: relative;
+  display: grid;
+  grid-template-columns: 1fr 1fr 2fr 2fr;
+  padding: 16px;
+}
+
+.game-settings-bar-item-wrapper {
+  margin: 0px 8px 0px 8px;
+}
+
+.game-settings-bar-nav-link {
+  grid-column: 4;
+  margin-top: 4px;
+}
+
+@media screen and (max-width: 300px) {
+  .settings-bar-nav-link {
+    display: none;
+  }
+}
+
+@media screen and (max-width: 600px) {
+  .settings-bar-nav-link {
+    display: none;
+  }
+}
+
+@media screen and (max-width: 900px) {
+  .settings-bar-nav-link {
+    display: none;
+  }
+}
+
+@media screen and (min-width: 1200px) {
+}

@@ -1,15 +1,15 @@
-import { Box } from "@mui/material";
+import { Grid } from "@mui/material";
 import React from "react";
 
 interface IProps {
-  spacing: number;
   children: JSX.Element;
+  className?: string;
 }
 
 const InputComponentWrapper: React.FC<IProps> = (props) => {
-  const { spacing, children } = props;
+  const { children, className } = props;
 
-  return <Box sx={{ margin: `${spacing}rem` }}>{children}</Box>;
+  return <Grid className={className}>{children}</Grid>;
 };
 
 export default InputComponentWrapper;
