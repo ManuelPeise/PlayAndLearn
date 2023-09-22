@@ -6,51 +6,53 @@ import useMemoryGame from "./_hooks/useMemoryGame";
 import GenericGameSettingsBar from "src/_components/_settings/GenericGameSettingsBar";
 import Loadingindicator from "src/_components/_loading/LoadingIndicator";
 import MemoryGameContainer from "./MemoryGameContainer";
+import InputButton from "src/_components/_input/InputButton";
+import MemoryLoadingIndicator from "./_components/MemoryLoadingIndicator";
 
 const MemoryPage: React.FC = () => {
   // const validator = useGameSettingsValidation();
 
   const { t } = useTranslation();
 
-  const pageTitle = React.useMemo(() => {
-    return t("memory:memoryPageTitle");
-  }, [t]);
-
   const {
     isLoading,
     contextData,
     gameIsRunning,
     memoryCards,
+    choiceOne,
+    choiceTwo,
+    attemts,
+    gameResultDualogOpen,
+    rateing,
     loadingIndicatorkey,
+    memoryLoadingIndicatorVisible,
+    currentPlayerKey,
+    handleGameResultDialogClose,
+    handleChoice,
     handleStartGame,
     handleGameConfigurationChanged,
   } = useMemoryGame();
 
-  // const [index, setIndex] = React.useState<number>(0);
+  const pageTitle = React.useMemo(() => {
+    return t("memory:memoryPageTitle");
+  }, [t]);
 
-  // const imgSrc = React.useMemo(() => {
-  //   if (
-  //     contextData?.cards[index] !== undefined &&
-  //     contextData?.cards[index]?.buffer?.length > 0
-  //   ) {
-  //     const src = `data:image/jpeg;base64,${contextData.cards[index].buffer}`;
+  const loadingIndicatorValue = React.useMemo(() => {
+    return t(`memory:${loadingIndicatorkey}`);
+  }, [t, loadingIndicatorkey]);
 
-  //     return src;
-  //   }
+  const currentPlayerLabel = React.useMemo(() => {
+    if (!currentPlayerKey || currentPlayerKey === "") {
+      return undefined;
+    }
 
-  //   return "";
-  // }, [contextData, index]);
+    return t(`memory:${currentPlayerKey}`);
+  }, [currentPlayerKey, t]);
 
   if (contextData == null) {
     return null;
   }
-  // {
-  //   /* <img
-  //           src={imgSrc}
-  //           style={{ width: 400, height: 400 }}
-  //           alt="TestCard"
-  //         /> */
-  // }
+
   return (
     <PageLayout
       pageTitle={pageTitle}
@@ -61,22 +63,54 @@ const MemoryPage: React.FC = () => {
             readonly={isLoading || gameIsRunning}
             marginTop={2}
             targetUrl="/memory/gameupload"
-            contextData={contextData}
+            hasTopicDropDown={contextData.gameConfiguration.hasTopicSelection}
+            hasLevelDropDown={contextData.gameConfiguration.hasLevelSelection}
+            hasPlayerDropDown={contextData.gameConfiguration.hasPlayerSelection}
+            topics={contextData.topicItems}
+            levels={contextData.levelItems}
+            players={contextData.playerItems}
+            selectedPlayer={contextData.gameConfiguration.selectedPlayer}
+            selectedLevel={contextData.gameConfiguration.selectedLevel}
+            selectedTopic={contextData.gameConfiguration.selectedTopic}
+            gameConfiguration={contextData.gameConfiguration}
             handleGameConfigurationChanged={handleGameConfigurationChanged}
           />
           {!gameIsRunning && (
-            <div style={{ display: "flex", justifyContent: "center" }}>
-              <button disabled={isLoading} onClick={handleStartGame}>
-                Start!
-              </button>
-            </div>
+            <InputButton
+              marginTop={2}
+              buttonType="button"
+              variant="contained"
+              text="Start Game"
+              handleClick={handleStartGame}
+              readonly={
+                isLoading ||
+                contextData?.gameConfiguration.selectedTopic === 0 ||
+                contextData.gameConfiguration.selectedLevel === 0
+              }
+            />
+          )}
+          {memoryLoadingIndicatorVisible && (
+            <MemoryLoadingIndicator
+              marginTop={5}
+              value={loadingIndicatorValue}
+            />
           )}
           {gameIsRunning && (
-            <div>
-              <label>{loadingIndicatorkey}</label>
-            </div>
+            <MemoryGameContainer
+              isLoading={isLoading}
+              cards={memoryCards}
+              choiseOne={choiceOne}
+              choiseTwo={choiceTwo}
+              attemts={attemts}
+              rating={rateing}
+              resultDialogOpen={gameResultDualogOpen}
+              currentPlayerLabel={currentPlayerLabel}
+              gameIsRunning={gameIsRunning}
+              memoryLoadingIndicatorVisible={memoryLoadingIndicatorVisible}
+              handleResultDialogClose={handleGameResultDialogClose}
+              handleChoice={handleChoice}
+            />
           )}
-          <MemoryGameContainer isLoading={isLoading} cards={memoryCards} />
         </Grid>
       }
     />

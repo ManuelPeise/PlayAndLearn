@@ -151,17 +151,6 @@ export const useMemoryUpload = (
     [settings, onSettingsChanged]
   );
 
-  const dataURItoBlob = React.useCallback((dataURI: string) => {
-    var byteString = atob(dataURI.split(",")[1]);
-    var ab = new ArrayBuffer(byteString.length);
-    var ia = new Uint8Array(ab);
-    for (var i = 0; i < byteString.length; i++) {
-      ia[i] = byteString.charCodeAt(i);
-    }
-    var bb = new Blob([ab]);
-    return bb;
-  }, []);
-
   const handleSelectFiles = React.useCallback(
     async (e: React.ChangeEvent<HTMLInputElement>) => {
       handleIsLoading(true);
@@ -193,7 +182,6 @@ export const useMemoryUpload = (
       }
       onSettingsChanged({ ...settings, files: mappings });
 
-      console.log("Settings:", settings);
       handleIsLoading(false);
     },
     [
@@ -203,7 +191,6 @@ export const useMemoryUpload = (
       getFileType,
       handleIsLoading,
       isAcceptedFile,
-      dataURItoBlob,
     ]
   );
 

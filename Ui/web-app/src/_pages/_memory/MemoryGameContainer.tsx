@@ -1,64 +1,142 @@
 import React from "react";
-import Grid from "@mui/material/Grid";
 import { IMemoryCard } from "./_intefaces/IMemoryCard";
-import { IMemoryCardRow } from "./_intefaces/IMemoryCardRow";
-import { Container } from "@mui/material";
+import MemoryCard from "./_components/MemoryCard";
+import {
+  DialogContent,
+  DialogContentText,
+  FormLabel,
+  Grid,
+} from "@mui/material";
+import { useTranslation } from "react-i18next";
+import MemoryDialog from "./_components/MemoryDialog";
+import { IStar } from "src/_lib/_intefaces/IRate";
+import { StarRate, StarBorder } from "@mui/icons-material";
 
 interface IProps {
   isLoading: boolean;
+  attemts: number;
+  resultDialogOpen: boolean;
+  rating: IStar[] | null;
   cards: IMemoryCard[];
+  choiseOne: IMemoryCard | null;
+  choiseTwo: IMemoryCard | null;
+  currentPlayerLabel?: string;
+  gameIsRunning: boolean;
+  memoryLoadingIndicatorVisible: boolean;
+  handleChoice: (card: IMemoryCard) => void;
+  handleResultDialogClose: () => void;
 }
 
 const MemoryGameContainer: React.FC<IProps> = (props) => {
   // eslint-disable-next-line
-  const { isLoading, cards } = props;
+  const {
+    rating,
+    attemts,
+    resultDialogOpen,
+    choiseOne,
+    choiseTwo,
+    cards,
+    currentPlayerLabel,
+    gameIsRunning,
+    memoryLoadingIndicatorVisible,
+    handleChoice,
+    handleResultDialogClose,
+  } = props;
+  const { t } = useTranslation();
 
-  const rows = React.useMemo((): IMemoryCardRow[] => {
-    const rowCount = cards.length / 4;
-    const rows: IMemoryCardRow[] = [];
-    let index = 0;
-    for (let rowId = 0; rowId < rowCount; rowId++) {
-      let row: IMemoryCardRow = { rowId: `row-${rowId}`, cards: [] };
-      for (let cardId = 0; cardId < 4; cardId++) {
-        row.cards.push(cards[index]);
-        index++;
-      }
-      // let row: IMemoryCardRow = {
-      //   rowId: `row-${i}`,
-      //   cards: cards.filter((x) => x.id >= i && x.id <= i + 3),
-      // };
-
-      rows.push(row);
-    }
-
-    return rows;
-  }, [cards]);
-
-  return (
-    <Grid container style={{ display: "flex", justifyContent: "center" }}>
-      {/* {settings.isRunning && ( */}
-      <Grid container style={{ display: "flex", justifyItems: "center" }}>
-        {rows.map((row) => {
-          return (
-            <Container
-              className="memory-card-container"
-              key={row.rowId}
-              style={{ display: "flex", justifyContent: "center" }}
-            >
-              {row.cards.map((card) => {
+  const gameResultDialogContext = React.useMemo(() => {
+    return (
+      <DialogContent>
+        {rating && (
+          <Grid
+            container
+            style={{
+              display: "flex",
+              justifyContent: "center",
+              marginBottom: "1.5rem",
+            }}
+          >
+            {rating.map((star, index) => {
+              if (star.color === "yellow") {
                 return (
-                  <img
-                    id={card.id.toString()}
-                    className="memory-card"
-                    key={card.key}
-                    src={`data:image/jpeg;base64,${card.foreground}`}
-                    alt=""
+                  <StarRate
+                    key={index}
+                    style={{
+                      width: "2.5rem",
+                      height: "2.5rem",
+                      color: star.color,
+                    }}
                   />
                 );
-              })}
-            </Container>
-          );
-        })}
+              } else {
+                return (
+                  <StarBorder
+                    key={index}
+                    style={{
+                      width: "2.5rem",
+                      height: "2.5rem",
+                    }}
+                  />
+                );
+              }
+            })}
+          </Grid>
+        )}
+        <DialogContentText>
+          {t("memory:labelGameResult").replace("attemts", `${attemts}`)}
+        </DialogContentText>
+      </DialogContent>
+    );
+  }, [t, attemts, rating]);
+
+  const resultDialogTitle = React.useMemo(() => {
+    return t("memory:titleGameResult");
+  }, [t]);
+
+  const okButtonText = React.useMemo(() => {
+    return t("memory:labelOK");
+  }, [t]);
+
+  return (
+    <Grid className="grid-container">
+      <Grid container justifyContent="center" direction="column">
+        <Grid
+          style={{
+            display: "flex",
+            justifyContent: "center",
+            marginTop: "1rem",
+          }}
+        >
+          {currentPlayerLabel !== undefined &&
+            gameIsRunning &&
+            !memoryLoadingIndicatorVisible && (
+              <FormLabel style={{ fontSize: "1.5rem" }}>
+                {currentPlayerLabel}
+              </FormLabel>
+            )}
+        </Grid>
+        <Grid className="card-grid">
+          {cards.map((card) => {
+            return (
+              <MemoryCard
+                readonly={choiseOne != null && choiseTwo != null}
+                key={card.key}
+                card={card}
+                isFlipped={
+                  choiseOne === card || choiseTwo === card || card.matched
+                }
+                handleChoice={handleChoice}
+              />
+            );
+          })}
+        </Grid>
+        <MemoryDialog
+          title={resultDialogTitle}
+          context={gameResultDialogContext}
+          open={resultDialogOpen}
+          closeButtonValue={okButtonText}
+          handleClose={handleResultDialogClose}
+        />
       </Grid>
     </Grid>
   );

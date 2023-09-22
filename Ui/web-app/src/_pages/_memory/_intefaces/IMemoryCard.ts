@@ -3,4 +3,5 @@ export interface IMemoryCard {
   id: number;
   foreground: string;
   background: string;
+  matched: boolean;
 }

@@ -28,7 +28,7 @@ namespace BusinessLogic.Shared
             {
                 var topics = await _gameTopicAccessor.GetEntitiesAsync(x => x.GameType == gameType);
 
-                var topicDropdownItems = new List<KeyValueItem> { new KeyValueItem { Key = 0, Value = "select" } };
+                var topicDropdownItems = new List<KeyValueItem> { new KeyValueItem { Key = 0, Value = "labelSelect" } };
                 topicDropdownItems.AddRange(from topic in topics
                                             select new KeyValueItem
                                             {
@@ -61,10 +61,10 @@ namespace BusinessLogic.Shared
         {
             return new List<KeyValueItem>
             {
-                new KeyValueItem {Key = 0, Value = "select"},
-                new KeyValueItem {Key = 1, Value = "easy"},
-                new KeyValueItem {Key = 2, Value = "medium"},
-                new KeyValueItem {Key = 3, Value = "hard"},
+                new KeyValueItem {Key = 0, Value = "labelSelect"},
+                new KeyValueItem {Key = 1, Value = "labelEasy"},
+                new KeyValueItem {Key = 2, Value = "labelMedium"},
+                new KeyValueItem {Key = 3, Value = "labelHard"},
             };
         }
 
@@ -75,17 +75,17 @@ namespace BusinessLogic.Shared
                 new KeyValueItem
                 {
                     Key = 0,
-                    Value = "select"
+                    Value = "labelSelect"
                 },
                 new KeyValueItem
                 {
                     Key = 1,
-                    Value = "playerOne"
+                    Value = "labelPlayerOne"
                 },
                 new KeyValueItem
                 {
                     Key = 2,
-                    Value = "playerTwo"
+                    Value = "labelPlayerTwo"
                 }
             };
         }

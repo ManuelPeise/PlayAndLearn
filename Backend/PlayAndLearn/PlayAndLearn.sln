@@ -31,7 +31,9 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Shared.Models", "Shared.Mod
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Shared.Images", "Shared.Images\Shared.Images.csproj", "{D9BC13EF-451B-49E7-8634-B0BEA4EF6C14}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BusinessLogic.Import", "BusinessLogic.Import\BusinessLogic.Import.csproj", "{4CF84688-F23D-4A05-BED1-3301E3F82DBD}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "BusinessLogic.Import", "BusinessLogic.Import\BusinessLogic.Import.csproj", "{4CF84688-F23D-4A05-BED1-3301E3F82DBD}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Service.Availability", "Service.Availability\Service.Availability.csproj", "{929A7911-3099-474B-9EB2-33D460438F69}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -79,6 +81,10 @@ Global
 		{4CF84688-F23D-4A05-BED1-3301E3F82DBD}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{4CF84688-F23D-4A05-BED1-3301E3F82DBD}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{4CF84688-F23D-4A05-BED1-3301E3F82DBD}.Release|Any CPU.Build.0 = Release|Any CPU
+		{929A7911-3099-474B-9EB2-33D460438F69}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{929A7911-3099-474B-9EB2-33D460438F69}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{929A7911-3099-474B-9EB2-33D460438F69}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{929A7911-3099-474B-9EB2-33D460438F69}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -94,6 +100,7 @@ Global
 		{6E7CC175-264C-41A1-A685-F56A711D3AE4} = {9BBB294D-F81C-4917-A33B-EE23052D3453}
 		{D9BC13EF-451B-49E7-8634-B0BEA4EF6C14} = {9BBB294D-F81C-4917-A33B-EE23052D3453}
 		{4CF84688-F23D-4A05-BED1-3301E3F82DBD} = {E75993DF-2AB6-40EE-A2B1-300DB24C359A}
+		{929A7911-3099-474B-9EB2-33D460438F69} = {D31B9814-E417-49AD-A877-D26D0EC70F68}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {4A7D614B-40B2-4D4A-952B-2AAAE7FFC9B6}

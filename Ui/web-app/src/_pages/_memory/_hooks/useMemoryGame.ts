@@ -6,6 +6,9 @@ import { GameTypeEnum } from "src/_lib/_enums/GameTypeEnum";
 import { IGameConfiguration } from "src/_lib/_intefaces/IGameConfiguration";
 import { MemoryGameHandler } from "../_handlers/MemoryGameHandler";
 import { IMemoryCard } from "../_intefaces/IMemoryCard";
+import { IStar } from "src/_lib/_intefaces/IRate";
+import { IMemoryPlayer } from "../_intefaces/IMemoryPlayer";
+import { IPlayer } from "src/_lib/_intefaces/IPlayer";
 
 const loadingIndikatorKeyValues = [
   "getCards",
@@ -22,26 +25,77 @@ export interface IUseMemoryGameResult {
   gameIsRunning: boolean;
   memoryCards: IMemoryCard[];
   loadingIndicatorkey: string;
-  handleContextDataChanged: (model: IMemoryGameContextData) => void;
+  choiceOne: IMemoryCard | null;
+  choiceTwo: IMemoryCard | null;
+  attemts: number;
+  gameResultDualogOpen: boolean;
+  rateing: IStar[] | null;
+  memoryLoadingIndicatorVisible: boolean;
+  currentPlayerKey: string;
+  handleGameResultDialogClose: () => void;
   handleGameConfigurationChanged: (
     gameConfiguration: IGameConfiguration
   ) => Promise<void>;
   handleStartGame: () => void;
+  handleChoice: (card: IMemoryCard) => void;
 }
 
 const useMemoryGame = (): IUseMemoryGameResult => {
   const [isLoading, setIsLoading] = React.useState<boolean>(false);
   const [contextData, setContextData] =
     React.useState<IMemoryGameContextData | null>(null);
-  const [gameIsRunning, setGameIsRunning] = React.useState<boolean>(false);
+
   const [memoryCards, setMemoryCards] = React.useState<IMemoryCard[]>([]);
+  const [memoryLoadingIndicatorVisible, setMemoryLoadingIndicatorVisible] =
+    React.useState<boolean>(false);
   const [loadingIndicatorkey, setLoadingIndicatorkey] =
     React.useState<string>("");
+
+  //#region game
+  const [gameIsRunning, setGameIsRunning] = React.useState<boolean>(false);
+  const [choiceOne, setChoiceOne] = React.useState<IMemoryCard | null>(null);
+  const [choiceTwo, setChoiceTwo] = React.useState<IMemoryCard | null>(null);
+  const [attemts, setAttemts] = React.useState<number>(0);
+  const [gameResultDualogOpen, setGameResultDualogOpen] =
+    React.useState<boolean>(false);
+  const [rateing, setRateing] = React.useState<IStar[] | null>(null);
+  // TODO implment usage
+  const [players, setPlayers] = React.useState<IMemoryPlayer[]>([]);
+  const [currentPlayer, setCurrentPlayer] = React.useState<IPlayer>(
+    {} as IPlayer
+  );
+  //#endregion
+
+  const handleGameResultDialogClose = React.useCallback(() => {
+    setGameResultDualogOpen(false);
+    setGameIsRunning(false);
+  }, []);
+
+  const handleChoice = React.useCallback(
+    (card: IMemoryCard) => {
+      if (choiceOne) {
+        setChoiceTwo(card);
+      } else {
+        setChoiceOne(card);
+      }
+    },
+    [choiceOne]
+  );
+
+  const resetChoice = React.useCallback(() => {
+    setChoiceOne(null);
+    setChoiceTwo(null);
+  }, []);
+
   const handleIsLoadingChanged = React.useCallback((isLaoding: boolean) => {
     setIsLoading(isLaoding);
   }, []);
 
   const gameHandlerRef = React.useRef<MemoryGameHandler | null>(null);
+
+  const currentPlayerKey = React.useMemo(() => {
+    return currentPlayer?.name;
+  }, [currentPlayer?.name]);
 
   const pageDataRequestModel = React.useMemo(() => {
     const requestModel: IMemoryGameDataRequestModel = {
@@ -54,14 +108,6 @@ const useMemoryGame = (): IUseMemoryGameResult => {
 
     return requestModel;
   }, [contextData]);
-
-  const handleContextDataChanged = React.useCallback(
-    (model: IMemoryGameContextData) => {
-      console.log(model);
-      setContextData(model);
-    },
-    []
-  );
 
   const { memoryGameContextDataService } = {
     memoryGameContextDataService: UseApi<IMemoryGameContextData>(
@@ -100,9 +146,9 @@ const useMemoryGame = (): IUseMemoryGameResult => {
       });
 
       await RefreshPageData({
+        selectedTopic: gameConfiguration.selectedTopic,
         selectedLevel: gameConfiguration.selectedLevel,
         selectedPlayer: gameConfiguration.selectedPlayer,
-        selectedTopic: gameConfiguration.selectedTopic,
         isInitialLoad: false,
         gameType: GameTypeEnum.Memory,
       });
@@ -111,6 +157,17 @@ const useMemoryGame = (): IUseMemoryGameResult => {
     [contextData, RefreshPageData]
   );
 
+  const handleChangePlayer = React.useCallback(() => {
+    const player = players.filter((p) => p?.name !== currentPlayer?.name);
+
+    setCurrentPlayer(player[0]);
+  }, [currentPlayer, players]);
+
+  const handleChangeOnGameStartPlayer = React.useCallback(() => {
+    setCurrentPlayer(players[0]);
+  }, [players]);
+
+  // start game
   const handleStartGame = React.useCallback(() => {
     if (contextData?.cards !== undefined) {
       const foregrounds = contextData.cards
@@ -130,10 +187,18 @@ const useMemoryGame = (): IUseMemoryGameResult => {
         background[0]
       );
 
+      const selectedPlayers = gameHandlerRef.current?.getPlayers(1);
+
+      setPlayers(selectedPlayers);
+
+      setRateing(gameHandlerRef.current?.getRateing() ?? []);
+
+      setAttemts(0);
       setGameIsRunning(true);
     }
-  }, [contextData?.cards]);
+  }, [contextData]);
 
+  // set context data after api call
   React.useEffect(() => {
     if (memoryGameContextDataService.response !== undefined) {
       setContextData(memoryGameContextDataService.response);
@@ -141,6 +206,7 @@ const useMemoryGame = (): IUseMemoryGameResult => {
     // eslint-disable-next-line
   }, [memoryGameContextDataService.response]);
 
+  // shuffle cards
   React.useEffect(() => {
     let index = 0;
 
@@ -149,8 +215,9 @@ const useMemoryGame = (): IUseMemoryGameResult => {
       gameHandlerRef.current != null &&
       gameHandlerRef.current.cards !== undefined
     ) {
+      let cards: IMemoryCard[] = [];
       const timeOut = setInterval(() => {
-        console.log("set cards count");
+        setMemoryLoadingIndicatorVisible(true);
         if (index === 0) {
           gameHandlerRef.current?.getCards(8);
           setLoadingIndicatorkey(loadingIndikatorKeyValues[index]);
@@ -159,17 +226,59 @@ const useMemoryGame = (): IUseMemoryGameResult => {
           setLoadingIndicatorkey(loadingIndikatorKeyValues[index]);
         } else if (index === 2) {
           setLoadingIndicatorkey(loadingIndikatorKeyValues[index]);
-          const cards = gameHandlerRef.current?.cards ?? [];
-          setMemoryCards(cards);
+          cards = gameHandlerRef.current?.cards ?? [];
         } else {
           setLoadingIndicatorkey("");
+          setMemoryLoadingIndicatorVisible(false);
+          setMemoryCards(cards);
           clearInterval(timeOut);
+          handleChangeOnGameStartPlayer();
         }
-        console.log("TimeOut:", timeOut);
         index = index + 1;
-      }, 0);
+      }, 1000);
     }
-  }, [gameIsRunning]);
+  }, [gameIsRunning, handleChangeOnGameStartPlayer]);
+
+  React.useEffect(() => {
+    if (choiceOne != null && choiceTwo != null) {
+      gameHandlerRef.current?.executeChoice(
+        choiceOne,
+        choiceTwo,
+        memoryCards,
+        attemts,
+        1000,
+        setAttemts,
+        setMemoryCards,
+        resetChoice
+      );
+    }
+    // eslint-disable-next-line
+  }, [memoryCards, choiceOne, choiceTwo, resetChoice]);
+
+  React.useEffect(() => {
+    if (memoryCards.filter((card) => card.matched === false)?.length === 0) {
+      if (gameIsRunning) {
+        const stars: IStar[] = [];
+        const rate =
+          gameHandlerRef.current?.getGameRating(
+            attemts,
+            contextData?.gameConfiguration.selectedLevel
+          ) ?? 0;
+
+        for (let i = 0; i < 5; i++) {
+          if (i < rate) {
+            stars.push({ color: "yellow" });
+          } else {
+            stars.push({ color: "transparent" });
+          }
+        }
+        setMemoryCards([]);
+        setRateing(stars);
+        setGameResultDualogOpen(true);
+      }
+    }
+    // eslint-disable-next-line
+  }, [memoryCards]);
 
   return {
     isLoading,
@@ -177,10 +286,18 @@ const useMemoryGame = (): IUseMemoryGameResult => {
     dataIsBound: contextData != null,
     gameIsRunning,
     memoryCards,
+    choiceOne,
+    choiceTwo,
+    attemts,
+    gameResultDualogOpen,
+    rateing,
     loadingIndicatorkey,
-    handleContextDataChanged,
+    memoryLoadingIndicatorVisible,
+    currentPlayerKey,
+    handleGameResultDialogClose,
     handleGameConfigurationChanged,
     handleStartGame,
+    handleChoice,
   };
 };
 

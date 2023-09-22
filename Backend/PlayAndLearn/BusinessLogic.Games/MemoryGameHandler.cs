@@ -144,7 +144,7 @@ namespace BusinessLogic.Games
                     using (var stream = new MemoryStream())
                     {
                         await file.CopyToAsync(stream);
-                     
+
                         var size = stream.Length;
                         var rawData = stream.GetBuffer();
 
@@ -184,7 +184,6 @@ namespace BusinessLogic.Games
 
                 return false;
             }
-            return true;
         }
         public async Task<bool> SaveOrUpdateGameSettings(MemoryGameSettingsRequestModel requestModel)
         {
@@ -257,9 +256,9 @@ namespace BusinessLogic.Games
                 {
                     GameConfiguration = new MemoryGameConfiguration
                     {
+                        SelectedTopic = requestModel.SelectedTopic,
                         SelectedLevel = requestModel.SelectedLevel,
                         SelectedPlayer = requestModel.SelectedPlayer,
-                        SelectedTopic = requestModel.SelectedTopic,
                         GameType = GameTypeEnum.Memory,
                         HasLevelSelection = requestModel.IsInitialLoad ? false : true,
                         HasPlayerSelection = requestModel.IsInitialLoad ? false : false,
@@ -270,7 +269,7 @@ namespace BusinessLogic.Games
                     TopicItems = await GetTopicDropdownItems(GameTypeEnum.Memory),
                     LevelItems = GetLevelDropdownItems(),
                     PlayerItems = GetPlayerDropdownItems(),
-                    Cards = await GetCards(requestModel.SelectedLevel, requestModel.SelectedTopic)
+                    Cards = await GetCards(requestModel.SelectedTopic)
                 };
 
             }
@@ -405,7 +404,7 @@ namespace BusinessLogic.Games
             return cards.Where(x => cardIds.Contains(x.Key)).ToList();
         }
 
-        private List<MemoryFileMapping> GetCardFileMappings(List<FileStorageEntity> cards, int cardsCount = 0)
+        private List<MemoryFileMapping> GetCardFileMappings(List<FileStorageEntity> cards)
         {
             var mappings = new List<MemoryFileMapping>();
 
@@ -430,14 +429,12 @@ namespace BusinessLogic.Games
 
             }
 
-            if (cardsCount == 0)
-            {
-                return mappings;
-            }
 
-            return GetFileMappingsToExport(mappings, cardsCount);
+
+            return mappings;
         }
-        private async Task<List<MemoryFileMapping>> GetCards(int level, int topicId)
+
+        private async Task<List<MemoryFileMapping>> GetCards(int topicId)
         {
             try
             {
@@ -455,13 +452,7 @@ namespace BusinessLogic.Games
                     throw new Exception($"Could not load cards for topic: [{topic.TopicName}].");
                 }
 
-                switch (level)
-                {
-                    case 1: return GetCardFileMappings(files, 4);
-                    case 2: return GetCardFileMappings(files, 6);
-                    case 3: return GetCardFileMappings(files, 12);
-                    default: return GetCardFileMappings(files, 0);
-                }
+                return GetCardFileMappings(files);
             }
             catch (Exception exception)
             {

@@ -22,16 +22,6 @@ namespace Services.Games.Controllers
             _logRepository = logRepository;
         }
 
-        //[HttpGet(Name = "GetMemoryGamePageData")]
-        //public async Task<MemoryGameContextData> GetMemoryGamePageData()
-        //{
-        //    using (var handler = _gameHandlerFactory.GetGameHandler(_logRepository, GameTypeEnum.Memory, _appDataContext))
-        //    {
-        //        var memoryHandler = (MemoryGameHandler)handler;
-        //        return await memoryHandler.GetMemoryPageData();
-        //    }
-        //}
-
         [HttpPost(Name = "GetMemoryGamePageData")]
         public async Task<MemoryGameContextData?> GetMemoryGamePageData()
         {

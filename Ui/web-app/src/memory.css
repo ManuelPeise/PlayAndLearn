@@ -1,49 +1,107 @@
-.memory-card {
-  background-color: blue;
-  border: 2px solid lightgray;
-  padding: ".1rem";
-  fill: "context-fill";
+.card-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  grid-gap: 5px;
 }
 
-.memory-card:hover {
-  background-color: red;
+.card {
+  position: relative;
+  border-radius: 16px;
+}
+
+.card-disabled {
+  pointer-events: none;
+}
+
+.card img {
+  padding: 0.2rem;
+  border: 2px solid darkblue;
+  min-height: 2rem;
+  min-width: 2rem;
+  display: block;
+  border-radius: 16px;
+}
+
+.card .front {
+  transform: rotateY(90deg);
+  transition: all ease-in 0.2s;
+  position: absolute;
+}
+
+.flipped .front {
+  transform: rotateY(0deg);
+  transition-delay: 0.2s;
+  cursor: not-allowed;
+}
+
+.card .back {
+  transition: all ease-in 0.2s;
+  transition-delay: 0.2s;
+}
+
+.card .back:hover {
   cursor: pointer;
 }
 
+.flipped .back {
+  transform: rotateY(90deg);
+  transition-delay: 0s;
+}
+
 @media screen and (min-width: 300px) {
-  .memory-card {
+  .card img {
+    min-width: 3rem;
+    min-height: 3rem;
     max-width: 3rem;
     max-height: 3rem;
   }
 }
-
-@media screen and (max-width: 600px) {
-  .memory-card {
-    min-width: 5rem;
-    min-height: 5rem;
-    margin: 0.2rem;
-    padding: 0.1rem;
+/* handy portrait */
+@media screen and (min-width: 400px) and (max-width: 720px) {
+  .card-grid {
+    margin-top: 6rem;
+  }
+  .card img {
+    min-width: 5em;
+    min-height: 5em;
+    max-width: 5em;
+    max-height: 5em;
   }
 }
 
-@media screen and (max-width: 900px) {
-  .memory-card {
-    min-width: 5rem;
-    min-height: 5rem;
-    max-width: 5rem;
-    max-height: 5rem;
-    margin: 0.3rem;
-    padding: 0.1rem;
+/* handy landscape */
+@media screen and (min-width: 600px) {
+  .card-grid {
+    margin-top: 1rem;
+  }
+  .card img {
+    min-width: 6rem;
+    min-height: 6rem;
+    max-width: 6rem;
+    max-height: 6rem;
+  }
+}
+
+@media screen and (min-width: 800px) {
+  .card-grid {
+    margin-top: 3rem;
+  }
+  .card img {
+    min-width: 11rem;
+    min-height: 11rem;
+    max-width: 11rem;
+    max-height: 11rem;
   }
 }
 
 @media screen and (min-width: 1200px) {
-  .memory-card {
+  .card-grid {
+    margin-top: 3rem;
+  }
+  .card img {
     min-width: 10rem;
     min-height: 10rem;
     max-width: 10rem;
     max-height: 10rem;
-    margin: 0.1rem;
-    padding: 0.1rem;
   }
 }
