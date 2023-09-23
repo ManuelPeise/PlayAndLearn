@@ -7,12 +7,16 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="Extensions\Games\**" />
+    <EmbeddedResource Remove="Extensions\Games\**" />
+    <None Remove="Extensions\Games\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.AspNetCore.Http" Version="2.2.0" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Extensions\Games\" />
-    <Folder Include="Extensions\Import\" />
     <Folder Include="Import\" />
   </ItemGroup>
 

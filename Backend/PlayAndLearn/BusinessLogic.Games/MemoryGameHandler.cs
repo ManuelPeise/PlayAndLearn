@@ -6,11 +6,10 @@ using Shared.Models;
 using Shared.Models.Entities;
 using Shared.Models.Enums.Games;
 using Shared.Models.Export;
+using Shared.Models.Extensions.Import;
 using Shared.Models.Games;
 using Shared.Models.Games.Memory;
 using System.Reflection;
-using System.Text;
-using static System.Net.Mime.MediaTypeNames;
 
 namespace BusinessLogic.Games
 {
@@ -19,6 +18,7 @@ namespace BusinessLogic.Games
         private IGenericDbContextAccessor<GameTopicEntity> _gameTopicAccessor;
         private IGenericDbContextAccessor<GameSettingsEntity> _gameSettingsAccessor;
         private IGenericDbContextAccessor<FileStorageEntity> _fileStorageAccessor;
+        private IGenericDbContextAccessor<MemoryStatisticData> _trainingsDataAccessor;
         private ILogRepository _logRepository;
 
         public MemoryGameHandler(ILogRepository logRepository, AppDataContext appDataContext) : base(appDataContext, logRepository)
@@ -26,6 +26,7 @@ namespace BusinessLogic.Games
             _gameTopicAccessor = new GenericDbContextAccessor<GameTopicEntity>(appDataContext);
             _gameSettingsAccessor = new GenericDbContextAccessor<GameSettingsEntity>(appDataContext);
             _fileStorageAccessor = new GenericDbContextAccessor<FileStorageEntity>(appDataContext);
+            _trainingsDataAccessor = new GenericDbContextAccessor<MemoryStatisticData>(appDataContext);
             _logRepository = logRepository;
         }
 
@@ -33,11 +34,12 @@ namespace BusinessLogic.Games
         {
             try
             {
+
                 return new MemorySettingsBarData
                 {
                     TitleKey = "memoryPageTitle",
                     LevelDropdownItems = GetLevelDropdownItems(),
-                    PlayerDropdownItems = GetPlayerDropdownItems(),
+                    PlayerDropdownItems = GetMemoryPlayerDropDoenItems(),
                     TopicDropdownItems = await GetTopicDropdownItems(GameTypeEnum.Memory)
                 };
             }
@@ -75,7 +77,7 @@ namespace BusinessLogic.Games
                 TopicFallbackValue = string.Empty,
                 TopicItems = await GetTopicDropdownItems(GameTypeEnum.Memory),
                 LevelItems = GetLevelDropdownItems(),
-                PlayerItems = GetPlayerDropdownItems()
+                PlayerItems = GetMemoryPlayerDropDoenItems()
 
             };
         }
@@ -98,7 +100,7 @@ namespace BusinessLogic.Games
                         Topic = topicName,
                         TopicFallbackValue = topicName,
                         TopicItems = await GetSettingsDropdownTopicItems(),
-                        PlayerItems = GetPlayerDropdownItems(),
+                        PlayerItems = GetMemoryPlayerDropDoenItems(),
                         LevelItems = GetLevelDropdownItems(),
                         Files = files.Any() ? GetCardFileMappings(files).ToList() : new List<MemoryFileMapping>(),
 
@@ -261,14 +263,14 @@ namespace BusinessLogic.Games
                         SelectedPlayer = requestModel.SelectedPlayer,
                         GameType = GameTypeEnum.Memory,
                         HasLevelSelection = requestModel.IsInitialLoad ? false : true,
-                        HasPlayerSelection = requestModel.IsInitialLoad ? false : false,
+                        HasPlayerSelection = requestModel.IsInitialLoad ? false : true,
                         HasTopicSelection = true,
                         Topic = "",
 
                     },
                     TopicItems = await GetTopicDropdownItems(GameTypeEnum.Memory),
                     LevelItems = GetLevelDropdownItems(),
-                    PlayerItems = GetPlayerDropdownItems(),
+                    PlayerItems = GetMemoryPlayerDropDoenItems(),
                     Cards = await GetCards(requestModel.SelectedTopic)
                 };
 
@@ -292,7 +294,6 @@ namespace BusinessLogic.Games
                 return null;
             }
         }
-
         public async Task<FileDownload?> GetWordlistFileStream()
         {
             var resource = Properties.Resources.MemoryWordList;
@@ -324,6 +325,34 @@ namespace BusinessLogic.Games
 
             }
         }
+
+        public async Task SaveMemoryTrainingsData(MemoryTrainingsDataImportModel model)
+        {
+            try
+            {
+                var entity = model.ToStaticticData();
+
+                await _trainingsDataAccessor.AddAsync(entity, x => x.Key == entity.Key);
+
+            }catch(Exception exception)
+            {
+                var msgKey = Guid.NewGuid();
+
+                var logMessage = new LogMessageEntity
+                {
+                    Key = msgKey,
+                    Message = "Saving memory statictic data failed!",
+                    ExMessage = exception.Message,
+                    Stacktrace = exception.StackTrace ?? string.Empty,
+                    Module = "Memory",
+                    TimeStamp = DateTime.UtcNow
+                };
+
+                await _logRepository.AddLogMessage(logMessage);
+            }
+        }
+
+        #region private members
         private async Task<int> GetTopicId(string topicName)
         {
             var topic = await _gameTopicAccessor.GetEntityAsync(x => x.TopicName == topicName);
@@ -379,31 +408,6 @@ namespace BusinessLogic.Games
                 return new List<KeyValueItem>();
             }
         }
-
-        private List<MemoryFileMapping> GetFileMappingsToExport(List<MemoryFileMapping> cards, int cardsCount)
-        {
-            var availableCardIds = cards.Select(x => x.Key).ToList();
-
-            var cardIds = new List<int>();
-
-            var maxCards = Math.Min(availableCardIds.Count, cardsCount);
-
-            var random = new Random();
-
-            do
-            {
-                var randomNumber = random.Next(1, availableCardIds.Count - 1);
-
-                if (!cardIds.Contains(randomNumber))
-                {
-                    cardIds.Add(randomNumber);
-                }
-
-            } while (cardIds.Count > maxCards);
-
-            return cards.Where(x => cardIds.Contains(x.Key)).ToList();
-        }
-
         private List<MemoryFileMapping> GetCardFileMappings(List<FileStorageEntity> cards)
         {
             var mappings = new List<MemoryFileMapping>();
@@ -433,7 +437,6 @@ namespace BusinessLogic.Games
 
             return mappings;
         }
-
         private async Task<List<MemoryFileMapping>> GetCards(int topicId)
         {
             try
@@ -474,16 +477,16 @@ namespace BusinessLogic.Games
             }
 
         }
-
-        private byte[] FileToByteArray(IFormFile file)
+        private List<KeyValueItem> GetMemoryPlayerDropDoenItems()
         {
-            using (var ms = new MemoryStream())
-            {
-                file.CopyTo(ms);
-                return ms.ToArray();
-            }
+            var items = GetPlayerDropdownItems();
 
+           // items.Add(new KeyValueItem { Key = items.Count + 1, Value = "labelVsKi" });
+            items.Add(new KeyValueItem { Key = items.Count, Value = "labelKiTraining" });
+
+            return items;
         }
 
+        #endregion
     }
 }

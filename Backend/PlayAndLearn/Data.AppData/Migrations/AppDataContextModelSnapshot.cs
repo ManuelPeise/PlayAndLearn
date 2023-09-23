@@ -130,6 +130,33 @@ namespace Data.AppData.Migrations
                     b.ToTable("LogMessages");
                 });
 
+            modelBuilder.Entity("Shared.Models.Entities.MemoryStatisticData", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<int>("ChoiceOne")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ChoiceTwo")
+                        .HasColumnType("int");
+
+                    b.Property<string>("ChoiceValue")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<Guid>("Key")
+                        .HasColumnType("char(36)");
+
+                    b.Property<bool>("Matched")
+                        .HasColumnType("tinyint(1)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("MemoryStatisticData");
+                });
+
             modelBuilder.Entity("Shared.Models.Entities.WordEntity", b =>
                 {
                     b.Property<int>("Id")

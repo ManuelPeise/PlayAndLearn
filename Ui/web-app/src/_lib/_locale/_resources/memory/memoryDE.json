@@ -23,6 +23,7 @@
   "labelPlayer": "Spieler",
   "labelPlayerOne": "1 Spieler",
   "labelPlayerTwo": "2 Spieler",
+  "labelKiTraining": "KI Training",
   "playerOneKey": "Spieler 1",
   "playerTwoKey": "Spieler 2",
   "playerAiKey": "CPU",
