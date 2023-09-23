@@ -11,8 +11,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Data.AppData.Migrations
 {
     [DbContext(typeof(AppDataContext))]
-    [Migration("20230919141820_InitializeDb")]
-    partial class InitializeDb
+    [Migration("20230923061556_InitializeDatabase")]
+    partial class InitializeDatabase
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
@@ -131,6 +131,33 @@ namespace Data.AppData.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("LogMessages");
+                });
+
+            modelBuilder.Entity("Shared.Models.Entities.MemoryStatisticData", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<int>("ChoiceOne")
+                        .HasColumnType("int");
+
+                    b.Property<int>("ChoiceTwo")
+                        .HasColumnType("int");
+
+                    b.Property<string>("ChoiceValue")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<Guid>("Key")
+                        .HasColumnType("char(36)");
+
+                    b.Property<bool>("Matched")
+                        .HasColumnType("tinyint(1)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("MemoryStatisticData");
                 });
 
             modelBuilder.Entity("Shared.Models.Entities.WordEntity", b =>

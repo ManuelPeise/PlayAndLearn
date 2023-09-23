@@ -2,6 +2,7 @@ import { getRandomIndex } from "src/_lib/_utils/GameConfigurationHandler";
 import { IMemoryCard } from "../_intefaces/IMemoryCard";
 import { IStar } from "src/_lib/_intefaces/IRate";
 import { IMemoryPlayer } from "../_intefaces/IMemoryPlayer";
+import { IMemoryTrainingsData } from "../_intefaces/IMemoryTrainingsData";
 
 export class MemoryGameHandler {
   private _binaryForegrounds: string[];
@@ -155,6 +156,20 @@ export class MemoryGameHandler {
     }
   };
 
+  public handleSaveTrainingsData = (
+    data: IMemoryTrainingsData,
+    url: string
+  ) => {
+    fetch(url, {
+      method: "POST",
+      mode: "cors",
+      headers: {
+        "content-type": `application/json`,
+      },
+      body: JSON.stringify(data),
+    });
+  };
+
   //#region private members
   private getSelectedCardIds(
     cards: IMemoryCard[],
@@ -183,7 +198,7 @@ export class MemoryGameHandler {
 
     const douplicatedCards = [...selectedCards, ...selectedCards]
       .sort(() => Math.random() - 0.5)
-      .map((card) => ({ ...card, key: Math.random() }));
+      .map((card, index) => ({ ...card, key: index }));
 
     return douplicatedCards;
   }

@@ -7,7 +7,7 @@ using MySql.EntityFrameworkCore.Metadata;
 namespace Data.AppData.Migrations
 {
     /// <inheritdoc />
-    public partial class InitializeDb : Migration
+    public partial class InitializeDatabase : Migration
     {
         /// <inheritdoc />
         protected override void Up(MigrationBuilder migrationBuilder)
@@ -87,6 +87,24 @@ namespace Data.AppData.Migrations
                 .Annotation("MySQL:Charset", "utf8mb4");
 
             migrationBuilder.CreateTable(
+                name: "MemoryStatisticData",
+                columns: table => new
+                {
+                    Id = table.Column<int>(type: "int", nullable: false)
+                        .Annotation("MySQL:ValueGenerationStrategy", MySQLValueGenerationStrategy.IdentityColumn),
+                    Key = table.Column<Guid>(type: "char(36)", nullable: false),
+                    ChoiceOne = table.Column<int>(type: "int", nullable: false),
+                    ChoiceTwo = table.Column<int>(type: "int", nullable: false),
+                    ChoiceValue = table.Column<string>(type: "longtext", nullable: false),
+                    Matched = table.Column<bool>(type: "tinyint(1)", nullable: false)
+                },
+                constraints: table =>
+                {
+                    table.PrimaryKey("PK_MemoryStatisticData", x => x.Id);
+                })
+                .Annotation("MySQL:Charset", "utf8mb4");
+
+            migrationBuilder.CreateTable(
                 name: "Words",
                 columns: table => new
                 {
@@ -117,6 +135,9 @@ namespace Data.AppData.Migrations
 
             migrationBuilder.DropTable(
                 name: "LogMessages");
+
+            migrationBuilder.DropTable(
+                name: "MemoryStatisticData");
 
             migrationBuilder.DropTable(
                 name: "Words");

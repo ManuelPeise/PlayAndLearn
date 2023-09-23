@@ -10,17 +10,8 @@ namespace Data.AppData
         public DbSet<GameSettingsEntity> GameSettings { get; set; }
         public DbSet<LogMessageEntity> LogMessages { get; set; }
         public DbSet<FileStorageEntity> FileStorage { get; set; }
-
+        public DbSet<MemoryStatisticData> MemoryStatisticData { get; set; }
         public AppDataContext(DbContextOptions options): base(options) { }
 
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
-        {
-            //modelBuilder.Entity<FileStorageEntity>(entity =>
-            //{
-            //    entity.Property(x => x.Content).HasColumnType("longblob");
-            //});
-
-            base.OnModelCreating(modelBuilder);
-        }
     }
 }

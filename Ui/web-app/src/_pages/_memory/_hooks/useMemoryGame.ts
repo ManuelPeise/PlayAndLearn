@@ -17,6 +17,7 @@ const loadingIndikatorKeyValues = [
 ];
 
 const memoryGameUploadController = `${process.env.REACT_APP_API_URL}MemoryGame/`;
+const memoryAiController = `${process.env.REACT_APP_API_URL}MemoryAi/`;
 
 export interface IUseMemoryGameResult {
   isLoading: boolean;
@@ -251,6 +252,19 @@ const useMemoryGame = (): IUseMemoryGameResult => {
         setMemoryCards,
         resetChoice
       );
+
+      console.log("Player:", contextData?.gameConfiguration.selectedPlayer);
+      if (contextData?.gameConfiguration.selectedPlayer === 3) {
+        gameHandlerRef.current?.handleSaveTrainingsData(
+          {
+            choiceValue: `${choiceOne.key}_${choiceTwo.key}`,
+            choiceOne: choiceOne.key,
+            choiceTwo: choiceTwo.key,
+            matched: choiceOne.id === choiceTwo.id,
+          },
+          `${memoryAiController}SaveMemoryTrainingsData`
+        );
+      }
     }
     // eslint-disable-next-line
   }, [memoryCards, choiceOne, choiceTwo, resetChoice]);
