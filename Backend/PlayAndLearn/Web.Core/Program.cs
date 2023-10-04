@@ -1,8 +1,11 @@
+using BusinessLogic.Administration;
 using BusinessLogic.Games;
+using BusinessLogic.Import;
 using BusinessLogic.Shared;
 using BusinessLogic.Shared.Interfaces;
 using Data.AppData;
 using Microsoft.AspNetCore.Http.Features;
+using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.EntityFrameworkCore;
 
 
@@ -10,17 +13,6 @@ var corsPolicy = "CorsPolicy";
 
 var builder = WebApplication.CreateBuilder(args);
 
-builder.Services.AddCors(opt =>
-{
-    opt.AddPolicy(
-        name: corsPolicy,
-        p =>
-    {
-        p.AllowAnyHeader();
-        p.AllowAnyMethod();
-        p.AllowAnyOrigin();
-    });
-});
 
 // Add services to the container.
 
@@ -32,9 +24,11 @@ builder.Services.AddDbContext<AppDataContext>(options =>
     options.UseMySQL(connection);
 });
 
-// builder.Services.AddScoped<IGenericDbContextAccessor<EntityBase>, GenericDbContextAccessor<EntityBase>>();
-builder.Services.AddScoped<IGameHandlerFactory, GameHandlerFactory>();
 builder.Services.AddScoped<ILogRepository, LogRepository>();
+builder.Services.AddScoped<IMemory, Memory>();
+builder.Services.AddScoped<IFileImport, FileImport>();
+builder.Services.AddScoped<IDatabaseMigrator, DatabaseMigrator>();
+
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
@@ -45,18 +39,40 @@ builder.Services.Configure<FormOptions>(options =>
     options.MultipartBodyLengthLimit = 268435456;
 });
 
+builder.Services.AddControllers().AddNewtonsoftJson();
+
+builder.Services.AddCors(opt =>
+{
+    opt.AddPolicy(
+        name: corsPolicy,
+        p =>
+        {
+            p.WithHeaders("*");
+            p.WithMethods("GET", "POST", "OPTIONS");
+            p.WithOrigins(new[] { "*" });
+        });
+});
+
 var app = builder.Build();
 
 app.UseCors(corsPolicy);
 
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
+app.UseForwardedHeaders(new ForwardedHeadersOptions
 {
-    app.UseSwagger();
-    app.UseSwaggerUI();
-}
+    ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
+});
 
-//app.UseHttpsRedirection();
+// Configure the HTTP request pipeline.
+//if (app.Environment.IsDevelopment())
+//{
+app.UseSwagger();
+app.UseSwaggerUI();
+//}
+
+//if (!app.Environment.IsDevelopment())
+//{
+ //  app.UseHttpsRedirection();
+//}
 
 app.UseAuthorization();
 

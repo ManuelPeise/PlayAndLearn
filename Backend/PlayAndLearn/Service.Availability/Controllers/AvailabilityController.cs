@@ -5,7 +5,7 @@ namespace Service.Availability.Controllers
 {
     public class AvailabilityController: ApiControllerBase
     {
-        [HttpGet]
+        [HttpGet(Name= "IsAvailable")]
         public async Task<bool> IsAvailable()
         {
             return true;

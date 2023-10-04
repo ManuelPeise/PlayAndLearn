@@ -1,19 +1,14 @@
 import React from "react";
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 import PublicRoute from "./PublicRoute";
-import MemoryPage from "../_memory/MemoryPage";
-import MemoryUploadPage from "../_memory/MemoryUploadPage";
+
+import MemoryGame from "../_memoryGame/MemoryGame";
 
 const AppRouter: React.FC = () => {
   return (
     <BrowserRouter>
       <Routes>
-        {/* <Route path="/" element={<TestPage />} /> */}
-        <Route path="/" element={<PublicRoute component={<MemoryPage />} />} />
-        <Route
-          path="/memory/gameupload"
-          element={<PublicRoute component={<MemoryUploadPage />} />}
-        />
+        <Route path="/" element={<PublicRoute component={<MemoryGame />} />} />
       </Routes>
     </BrowserRouter>
   );

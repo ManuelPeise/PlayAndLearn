@@ -51,7 +51,7 @@ const PageHeader: React.FC<IProps> = (props) => {
         >
           {pageTitle}
         </Typography>
-        <InputDropdown {...inputDropdownProps} />
+        <InputDropdown {...inputDropdownProps} minWidth={-5} />
       </Toolbar>
     </AppBar>
   );

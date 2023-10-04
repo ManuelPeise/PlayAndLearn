@@ -7,7 +7,7 @@ interface IProps {
   value: string;
   inputValue: string;
   noOptionLabel?: string;
-  label: string;
+  label?: string;
   fullwidth?: boolean;
   placeholder?: string;
   hasDivider?: boolean;
@@ -46,15 +46,17 @@ const AutoCompleteListItem: React.FC<IProps> = (props) => {
 
   return (
     <ListItem divider={hasDivider}>
-      <ListItemText sx={{ paddingLeft: ".5rem", fontSize: "1rem" }}>
-        {label}
-      </ListItemText>
+      {label && (
+        <ListItemText sx={{ paddingLeft: ".5rem", fontSize: "1rem" }}>
+          {label}
+        </ListItemText>
+      )}
       <Autocomplete
-        sx={{ paddingLeft: "2rem" }}
         readOnly={readonly}
         defaultValue={null}
         fullWidth={fullwidth}
         options={items}
+        freeSolo
         getOptionLabel={(item) => item}
         noOptionsText={noOptionLabel ?? "-"}
         id="auto-complete"

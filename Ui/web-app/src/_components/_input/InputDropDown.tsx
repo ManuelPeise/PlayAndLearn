@@ -2,7 +2,9 @@ import React from "react";
 import { IInputDropdownProps } from "../_componentHooks/useInputDropdownProps";
 import { Box, Select, MenuItem, Tooltip } from "@mui/material";
 
-interface IProps extends IInputDropdownProps {}
+interface IProps extends IInputDropdownProps {
+  minWidth?: number;
+}
 
 const InputDropdown: React.FC<IProps> = (props) => {
   const {
@@ -13,6 +15,7 @@ const InputDropdown: React.FC<IProps> = (props) => {
     fullWidth,
     color,
     toolTip,
+    minWidth,
     handleChange,
   } = props;
 
@@ -23,7 +26,7 @@ const InputDropdown: React.FC<IProps> = (props) => {
         justifyContent: "center",
         alignContent: "center",
         alignItems: "center",
-        minWidth: "1.5rem",
+        width: minWidth !== undefined ? `${minWidth}rem` : `1.5rem`,
         minHeight: "1.5rem",
       }}
     >
@@ -33,6 +36,7 @@ const InputDropdown: React.FC<IProps> = (props) => {
             sx={{
               color: color,
               outline: "none",
+              width: minWidth !== undefined ? `${minWidth}rem` : `1.5rem`,
               ".MuiSvgIcon-root": {
                 fill: `${color}!important`,
               },

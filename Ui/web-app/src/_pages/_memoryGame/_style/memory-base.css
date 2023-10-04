@@ -1,0 +1,20 @@
+.form-link-container {
+  display: flex;
+  justify-content: center;
+  margin-top: 1.5rem;
+}
+
+.form-link-description-text {
+  font-size: 1.2rem !important;
+  font-style: italic;
+}
+
+.form-link-description-text span {
+  font-style: italic;
+  margin-left: 1rem;
+}
+
+.form-link-description-text span:hover {
+  cursor: pointer;
+  color: lightblue;
+}

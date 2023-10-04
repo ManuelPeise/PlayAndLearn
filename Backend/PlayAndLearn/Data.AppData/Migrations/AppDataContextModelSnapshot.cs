@@ -36,10 +36,6 @@ namespace Data.AppData.Migrations
                     b.Property<int>("FileSize")
                         .HasColumnType("int");
 
-                    b.Property<string>("FileType")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
                     b.Property<string>("Module")
                         .IsRequired()
                         .HasColumnType("longtext");
@@ -53,48 +49,46 @@ namespace Data.AppData.Migrations
                     b.ToTable("FileStorage");
                 });
 
-            modelBuilder.Entity("Shared.Models.Entities.GameSettingsEntity", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    b.Property<int>("GameTypeId")
-                        .HasColumnType("int");
-
-                    b.Property<bool>("HasLevelSelection")
-                        .HasColumnType("tinyint(1)");
-
-                    b.Property<bool>("HasPlayerSelection")
-                        .HasColumnType("tinyint(1)");
-
-                    b.Property<bool>("HasTopicSelection")
-                        .HasColumnType("tinyint(1)");
-
-                    b.Property<int>("TopicId")
-                        .HasColumnType("int");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("GameSettings");
-                });
-
             modelBuilder.Entity("Shared.Models.Entities.GameTopicEntity", b =>
                 {
                     b.Property<int>("Id")
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int");
 
-                    b.Property<int>("GameType")
-                        .HasColumnType("int");
-
                     b.Property<string>("TopicName")
                         .IsRequired()
                         .HasColumnType("longtext");
 
+                    b.Property<int>("TopicType")
+                        .HasColumnType("int");
+
                     b.HasKey("Id");
 
                     b.ToTable("GameTopics");
+                });
+
+            modelBuilder.Entity("Shared.Models.Entities.HighScore", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    b.Property<int>("Attemts")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Level")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("longtext");
+
+                    b.Property<int>("Score")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("MemoryHighScore");
                 });
 
             modelBuilder.Entity("Shared.Models.Entities.LogMessageEntity", b =>
@@ -128,54 +122,6 @@ namespace Data.AppData.Migrations
                     b.HasKey("Id");
 
                     b.ToTable("LogMessages");
-                });
-
-            modelBuilder.Entity("Shared.Models.Entities.MemoryStatisticData", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    b.Property<int>("ChoiceOne")
-                        .HasColumnType("int");
-
-                    b.Property<int>("ChoiceTwo")
-                        .HasColumnType("int");
-
-                    b.Property<string>("ChoiceValue")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
-                    b.Property<Guid>("Key")
-                        .HasColumnType("char(36)");
-
-                    b.Property<bool>("Matched")
-                        .HasColumnType("tinyint(1)");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("MemoryStatisticData");
-                });
-
-            modelBuilder.Entity("Shared.Models.Entities.WordEntity", b =>
-                {
-                    b.Property<int>("Id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("int");
-
-                    b.Property<int>("GameType")
-                        .HasColumnType("int");
-
-                    b.Property<int>("Level")
-                        .HasColumnType("int");
-
-                    b.Property<string>("Value")
-                        .IsRequired()
-                        .HasColumnType("longtext");
-
-                    b.HasKey("Id");
-
-                    b.ToTable("Words");
                 });
 #pragma warning restore 612, 618
         }

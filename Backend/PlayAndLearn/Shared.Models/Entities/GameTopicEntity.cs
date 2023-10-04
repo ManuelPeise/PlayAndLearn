@@ -1,11 +1,11 @@
-﻿using Shared.Models.Enums.Games;
+﻿using Shared.Models.Enums.Import;
 
 namespace Shared.Models.Entities
 {
     public class GameTopicEntity : EntityBase
     {
         public string TopicName { get; set; } = string.Empty;
-        public GameTypeEnum GameType { get; set; }
+        public TopicTypeEnum TopicType { get; set; }
 
     }
 }
