@@ -7,7 +7,7 @@ using Data.AppData;
 using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.HttpOverrides;
 using Microsoft.EntityFrameworkCore;
-
+using Web.Core.Bundles;
 
 var corsPolicy = "CorsPolicy";
 
@@ -77,5 +77,10 @@ app.UseSwaggerUI();
 app.UseAuthorization();
 
 app.MapControllers();
+
+var scope = app.Services.CreateScope();
+var logService = scope.ServiceProvider.GetRequiredService<ILogRepository>();
+
+AppScheduler.Configure(builder.Configuration, logService);
 
 app.Run();
