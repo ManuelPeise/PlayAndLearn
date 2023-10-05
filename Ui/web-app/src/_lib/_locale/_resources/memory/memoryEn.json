@@ -1,0 +1,13 @@
+{
+  "pageTitle": "Memory-Game",
+  "labelAddOrUpdateMemoryGame": "Add Game",
+  "labelMemoryUploadGame": "Upload Game",
+  "labelHighScoreList": "High Score List",
+  "labelAttemts": "Attemts",
+  "labelRating": "Rating",
+  "labelAddGame": "Here you can add your own",
+  "labelUploadGame": "game.",
+  "labelGetCards": "Get the cards from the cupboard...",
+  "labelShuffleCards": "Shuffle the cards properly...",
+  "labelDistributeCards": "Distribute the cards on the field..."
+}

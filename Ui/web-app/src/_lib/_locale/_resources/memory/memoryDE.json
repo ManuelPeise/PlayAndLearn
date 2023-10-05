@@ -1,0 +1,13 @@
+{
+  "pageTitle": "Memory-Spiel",
+  "labelAddOrUpdateMemoryGame": "Spiel hinzufügen",
+  "labelMemoryUploadGame": "Spiel hoch laden",
+  "labelHighScoreList": "Bestenliste",
+  "labelAttemts": "Versuche",
+  "labelRating": "Bewertung",
+  "labelAddGame": "Hier kannst Du dein eigenes Spiel",
+  "labelUploadGame": "hinzufügen.",
+  "labelGetCards": "Hole die Karten aud dem Schrank...",
+  "labelShuffleCards": "Mische die Karten ordentlich durch...",
+  "labelDistributeCards": "Verteile die Karten auf dem Spielfeld..."
+}
