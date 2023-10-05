@@ -32,7 +32,7 @@ const MemoryGame: React.FC = () => {
   }, []);
 
   const pageTitle = React.useMemo(() => {
-    return t(`memory:titleMemoryPage`);
+    return t(`memory:pageTitle`);
   }, [t]);
 
   return (

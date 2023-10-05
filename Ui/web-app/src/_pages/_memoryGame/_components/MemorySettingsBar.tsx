@@ -34,11 +34,11 @@ const MemorySettingsBar: React.FC<IProps> = (props) => {
   const { t } = useTranslation();
 
   const { topicLabel, skillLabel, playerLabel, startGame, playerConfig } = {
-    topicLabel: t("memory:topic"),
-    skillLabel: t("memory:skill"),
-    playerLabel: t("memory:player"),
-    startGame: t("memory:labelStartGame"),
-    playerConfig: t("memory:labelPlayerConfig"),
+    topicLabel: t("common:labelTopic"),
+    skillLabel: t("common:labelSkill"),
+    playerLabel: t("common:labelPlayer"),
+    startGame: t("common:labelStartGame"),
+    playerConfig: t("common:labelPlayerConfig"),
   };
 
   const settingsApi = UseApi<ISettingsBarData>(
@@ -57,7 +57,7 @@ const MemorySettingsBar: React.FC<IProps> = (props) => {
   const topicItems = React.useMemo((): IKeyValueItem[] => {
     const items: IKeyValueItem[] = [];
     settingsApi.response?.topicItems?.forEach((topic) => {
-      items.push({ key: topic.key, value: t(`memory:${topic.value}`) });
+      items.push({ key: topic.key, value: t(`common:${topic.value}`) });
     });
 
     return items;
@@ -66,7 +66,7 @@ const MemorySettingsBar: React.FC<IProps> = (props) => {
   const playerItems = React.useMemo((): IKeyValueItem[] => {
     const items: IKeyValueItem[] = [];
     settingsApi.response?.playerItems?.forEach((player) => {
-      items.push({ key: player.key, value: t(`memory:${player.value}`) });
+      items.push({ key: player.key, value: t(`common:${player.value}`) });
     });
 
     return items;
@@ -75,7 +75,7 @@ const MemorySettingsBar: React.FC<IProps> = (props) => {
   const levelItems = React.useMemo((): IKeyValueItem[] => {
     const items: IKeyValueItem[] = [];
     settingsApi.response?.levelItems?.forEach((level) => {
-      items.push({ key: level.key, value: t(`memory:${level.value}`) });
+      items.push({ key: level.key, value: t(`common:${level.value}`) });
     });
 
     return items;

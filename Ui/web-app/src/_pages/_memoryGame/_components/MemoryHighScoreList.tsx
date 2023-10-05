@@ -52,10 +52,10 @@ const MemoryHighScoreList: React.FC<IProps> = (props) => {
   }, [t]);
 
   const items: IKeyValueItem[] = [
-    { key: 0, value: t("memory:labelSelect") },
-    { key: 1, value: t("memory:labelEasy") },
-    { key: 2, value: t("memory:labelMedium") },
-    { key: 3, value: t("memory:labelHard") },
+    { key: 0, value: t("common:labelSelect") },
+    { key: 1, value: t("common:labelEasy") },
+    { key: 2, value: t("common:labelMedium") },
+    { key: 3, value: t("common:labelHard") },
   ];
 
   const handleChange = React.useCallback((e: SelectChangeEvent) => {
@@ -65,7 +65,7 @@ const MemoryHighScoreList: React.FC<IProps> = (props) => {
   }, []);
 
   const labelPlayer = React.useMemo(() => {
-    return t("memory:labelPlayer");
+    return t("common:labelPlayer");
   }, [t]);
 
   const labelAttemts = React.useMemo(() => {

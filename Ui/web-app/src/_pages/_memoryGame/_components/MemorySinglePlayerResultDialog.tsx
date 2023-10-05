@@ -26,15 +26,15 @@ const MemorySinglePlayerResultDialog: React.FC<IProps> = (props) => {
   const { t } = useTranslation();
 
   const title = React.useMemo(() => {
-    return t("memory:labelGameEnd");
+    return t("common:labelGameEnd");
   }, [t]);
 
   const resultLabel = React.useMemo(() => {
-    return t("memory:labelGameResult").replace("attemts", `${attemts}`);
+    return t("common:labelGameResult").replace("attemts", `${attemts}`);
   }, [t, attemts]);
 
   const buttonLabel = React.useMemo(() => {
-    return t("memory:labelOK");
+    return t("common:labelOK");
   }, [t]);
 
   return (

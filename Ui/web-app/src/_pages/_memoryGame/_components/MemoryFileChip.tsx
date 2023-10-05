@@ -12,7 +12,6 @@ const MemoryFileChip: React.FC<IProps> = (props) => {
   const { mapping, handleDeleteFile } = props;
 
   const handleDelete = React.useCallback(() => {
-    console.log("try delete item...", mapping.key);
     handleDeleteFile(mapping);
   }, [handleDeleteFile, mapping]);
 

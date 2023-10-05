@@ -50,19 +50,19 @@ const MemoryGameUploadDialog: React.FC<IProps> = (props) => {
   }, [t]);
 
   const topicLabel = React.useMemo(() => {
-    return t("memory:labelTopic");
+    return t("common:labelTopic");
   }, [t]);
 
   const labelImportFiles = React.useMemo(() => {
-    return t(`memory:labelImportMemoryFiles`);
+    return t("common:labelImportFiles");
   }, [t]);
 
   const labelSave = React.useMemo(() => {
-    return t(`memory:labelSave`);
+    return t("common:labelSave");
   }, [t]);
 
   const labelCancel = React.useMemo(() => {
-    return t(`memory:labelCancel`);
+    return t("common:labelCancel");
   }, [t]);
 
   const handleCloseDialog = React.useCallback(() => {
@@ -76,7 +76,12 @@ const MemoryGameUploadDialog: React.FC<IProps> = (props) => {
   }, [handleClose, handleSave]);
 
   return (
-    <Dialog open={open} keepMounted TransitionComponent={DialogTransitionUp}>
+    <Dialog
+      maxWidth="md"
+      open={open}
+      keepMounted
+      TransitionComponent={DialogTransitionUp}
+    >
       <DialogTitle style={{ display: "flex", justifyContent: "center" }}>
         {dialogTitle}
       </DialogTitle>

@@ -21,17 +21,17 @@ const MemorySwitchPlayerDialog: React.FC<IProps> = (props) => {
   const { t } = useTranslation();
 
   const title = React.useMemo(() => {
-    return t("memory:labelSwitchPlayer");
+    return t("common:labelSwitchPlayer");
   }, [t]);
 
   const text = React.useMemo(() => {
-    const label = t("memory:labelNextPlayer").replace("name", nextPlayerName);
+    const label = t("common:labelNextPlayer").replace("name", nextPlayerName);
 
     return label;
   }, [t, nextPlayerName]);
 
   const buttonLabel = React.useMemo(() => {
-    return t("memory:labelOK");
+    return t("common:labelOK");
   }, [t]);
 
   const onClose = React.useCallback(() => {

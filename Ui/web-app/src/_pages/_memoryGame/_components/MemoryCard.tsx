@@ -19,7 +19,7 @@ const MemoryCard: React.FC<IProps> = (props) => {
     return getFileSrcFromBase64(card.foreground);
   }, [card.foreground]);
 
-  const onChoice = React.useCallback(() => {
+  const onChoice = React.useCallback((): void => {
     handleChoice(card);
   }, [card, handleChoice]);
 

@@ -23,15 +23,15 @@ const MemoryGameResultDialog: React.FC<IProps> = (props) => {
   const { t } = useTranslation();
 
   const title = React.useMemo(() => {
-    return t("memory:labelGameEnd");
+    return t("common:labelGameEnd");
   }, [t]);
 
   const OKlabel = React.useMemo(() => {
-    return t("memory:labelOK");
+    return t("common:labelOK");
   }, [t]);
 
   const restartGameLabel = React.useMemo(() => {
-    return t("memory:labelRestartGame");
+    return t("common:labelRestartGame");
   }, [t]);
 
   const contentText = React.useMemo(() => {
