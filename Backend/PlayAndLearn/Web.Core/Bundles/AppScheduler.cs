@@ -20,6 +20,8 @@ namespace Web.Core.Bundles
                 .RepeatForever(),
                 config.GetRequiredSection("DataBaseMigrationEndpoint").Value ?? "",
                 5000);
+
+            scheduler.Start();
         }
 
         private static void ScheduleJob(IScheduler schreduler, DateTimeOffset start, IScheduleBuilder buider, string url, int timeoutSeconds)

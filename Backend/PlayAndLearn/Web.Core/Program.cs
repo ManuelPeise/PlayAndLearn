@@ -69,6 +69,6 @@ app.UseAuthorization();
 
 app.MapControllers();
 
-// AppScheduler.Configure(builder.Configuration);
+AppScheduler.Configure(builder.Configuration);
 
 app.Run();

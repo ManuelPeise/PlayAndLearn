@@ -1,7 +1,7 @@
 ﻿using BusinessLogic.Shared;
 using BusinessLogic.Shared.Interfaces;
 using Quartz;
-using Shared.Models.Entities;
+using System.Diagnostics;
 
 namespace Web.Core.Bundles.Models
 {
@@ -9,6 +9,7 @@ namespace Web.Core.Bundles.Models
     {
         public int TimoutSeconds { get; set; } = 5000;
         public string RequestUri { get; set; } = string.Empty;
+
 
         public async Task Execute(IJobExecutionContext context)
         {
@@ -19,11 +20,14 @@ namespace Web.Core.Bundles.Models
                     var response = await client.GetAsync(RequestUri);
 
                     response.EnsureSuccessStatusCode();
+
+                    Debug.WriteLine(response.StatusCode);
                 }
 
-            }catch (Exception exception) 
+            }
+            catch (Exception exception)
             {
-               
+
             }
         }
     }
