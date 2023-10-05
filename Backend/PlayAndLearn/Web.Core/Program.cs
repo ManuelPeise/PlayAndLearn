@@ -78,9 +78,6 @@ app.UseAuthorization();
 
 app.MapControllers();
 
-var scope = app.Services.CreateScope();
-var logService = scope.ServiceProvider.GetRequiredService<ILogRepository>();
-
-AppScheduler.Configure(builder.Configuration, logService);
+AppScheduler.Configure(builder.Configuration);
 
 app.Run();

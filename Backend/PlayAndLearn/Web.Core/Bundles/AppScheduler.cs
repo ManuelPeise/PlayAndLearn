@@ -7,25 +7,22 @@ namespace Web.Core.Bundles
 {
     public class AppScheduler
     {
-        private static ILogRepository _logRepository;
-        public static void Configure(IConfiguration config, ILogRepository logRepository)
-        {
-            _logRepository = logRepository;
 
+        public static void Configure(IConfiguration config)
+        {
             var factory = new StdSchedulerFactory();
             var scheduler = factory.GetScheduler().Result;
 
-            ScheduleJob("Database Migrator",
-                scheduler,
+            ScheduleJob(scheduler,
                 DateBuilder.NextGivenMinuteDate(null, 1),
                 SimpleScheduleBuilder.Create()
                 .WithIntervalInHours(24)
                 .RepeatForever(),
-                config.GetRequiredSection("DataBaseMigrationEndpoint").Value?? "",
+                config.GetRequiredSection("DataBaseMigrationEndpoint").Value ?? "",
                 5000);
         }
 
-        private static void ScheduleJob(string jobName, IScheduler schreduler, DateTimeOffset start, IScheduleBuilder buider, string url, int timeoutSeconds)
+        private static void ScheduleJob(IScheduler schreduler, DateTimeOffset start, IScheduleBuilder buider, string url, int timeoutSeconds)
         {
             var job = JobBuilder
                 .Create<WebScheduleJob>()
@@ -39,14 +36,6 @@ namespace Web.Core.Bundles
                         nameof(WebScheduleJob.RequestUri),
                         url
                     },
-                    {
-                        nameof(WebScheduleJob.LogRepository),
-                        _logRepository
-                    },
-                    {
-                        nameof(WebScheduleJob.JobName),
-                        jobName
-                    }
                 })
                 .Build();
 
