@@ -62,22 +62,13 @@ app.UseForwardedHeaders(new ForwardedHeadersOptions
     ForwardedHeaders = ForwardedHeaders.XForwardedFor | ForwardedHeaders.XForwardedProto
 });
 
-// Configure the HTTP request pipeline.
-//if (app.Environment.IsDevelopment())
-//{
 app.UseSwagger();
 app.UseSwaggerUI();
-//}
-
-//if (!app.Environment.IsDevelopment())
-//{
- //  app.UseHttpsRedirection();
-//}
 
 app.UseAuthorization();
 
 app.MapControllers();
 
-AppScheduler.Configure(builder.Configuration);
+// AppScheduler.Configure(builder.Configuration);
 
 app.Run();

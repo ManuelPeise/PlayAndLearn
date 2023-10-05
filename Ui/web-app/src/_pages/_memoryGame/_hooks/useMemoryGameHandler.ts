@@ -10,10 +10,11 @@ import { IStar } from "src/_lib/_intefaces/IRate";
 import { IMemoryHighScore } from "../_interfaces/IMemoryHighScore";
 
 const controller = `${process.env.REACT_APP_API_URL}Memory/`;
+
 const loadingIndikatorKeyValues = [
-  "getCards",
-  "shuffleCards",
-  "distributeCards",
+  "labelGetCards",
+  "labelShuffleCards",
+  "labelDistributeCards",
 ];
 
 export const UseMemoryGameHandler = (

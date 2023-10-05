@@ -10,7 +10,6 @@ interface IProps {
 
 const MemoryFileChipListItem: React.FC<IProps> = (props) => {
   const { files, handleDeleteFile } = props;
-  console.log("files:", files);
 
   return (
     <ListItem>

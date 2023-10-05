@@ -28,12 +28,10 @@ const MemoryLoadingIndicator: React.FC<IProps> = (props) => {
         marginTop: `${marginTop}rem`,
         opacity: ".5",
         padding: "1rem",
-        borderRadius: "16px",
-        fontSize: "2rem",
       }}
       container
     >
-      <FormLabel>{loadingIndicatorText}</FormLabel>
+      <FormLabel style={{ fontSize: "2rem" }}>{loadingIndicatorText}</FormLabel>
     </Grid>
   );
 };

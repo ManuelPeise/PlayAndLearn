@@ -55,11 +55,11 @@ const MemoryPlayGround: React.FC<IProps> = (props) => {
   }, [startGame]);
 
   const labelAddGameDescription = React.useMemo(() => {
-    return t("memory:labelAddGameDescription");
+    return t("memory:labelAddGame");
   }, [t]);
 
   const linkAddGame = React.useMemo(() => {
-    return t("memory:linkAddGame");
+    return t("memory:labelUploadGame");
   }, [t]);
 
   return (

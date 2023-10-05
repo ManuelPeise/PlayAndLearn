@@ -34,11 +34,11 @@ const PlayerConfigurationDialog: React.FC<IProps> = (props) => {
   }, [settings.players]);
 
   const { dialogTitle, labelSave, labelCancel, playerOne, playerTwo } = {
-    dialogTitle: t("memory:labelPlayerSettings"),
-    labelCancel: t(`memory:labelCancel`),
-    labelSave: t(`memory:labelSave`),
-    playerOne: t(`memory:playerOneKey`),
-    playerTwo: t(`memory:playerTwoKey`),
+    dialogTitle: t("common:labelPlayerConfig"),
+    labelCancel: t("common:labelCancel"),
+    labelSave: t("common:labelSave"),
+    playerOne: t("common:playerOneKey"),
+    playerTwo: t("common:playerTwoKey"),
   };
 
   const handleSavePlayersAndCloseDialog = React.useCallback(() => {
@@ -101,9 +101,9 @@ const PlayerConfigurationDialog: React.FC<IProps> = (props) => {
               <InputTextField
                 autocomplete="off"
                 fullwidth={true}
-                value={players[1]?.isAiPlayer ? "CPU" : players[1].name}
+                value={players[1]?.isAiPlayer ? "Ai" : players[1].name}
                 readonly={players[1]?.isAiPlayer}
-                placeholder={players[1]?.isAiPlayer ? "CPU" : playerTwo}
+                placeholder={players[1]?.isAiPlayer ? "Ai" : playerTwo}
                 handleTextChanged={handlePlayerTwoChanged}
               />
             )}
