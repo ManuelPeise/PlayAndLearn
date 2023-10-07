@@ -1,6 +1,7 @@
 using BusinessLogic.Administration;
 using BusinessLogic.Games;
 using BusinessLogic.Import;
+using BusinessLogic.Infrastructure;
 using BusinessLogic.Shared;
 using BusinessLogic.Shared.Interfaces;
 using Data.AppData;
@@ -28,6 +29,9 @@ builder.Services.AddScoped<ILogRepository, LogRepository>();
 builder.Services.AddScoped<IMemory, Memory>();
 builder.Services.AddScoped<IFileImport, FileImport>();
 builder.Services.AddScoped<IDatabaseMigrator, DatabaseMigrator>();
+builder.Services.AddScoped<ISideMenuHandler, SideMenuHandler>();
+
+
 
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
