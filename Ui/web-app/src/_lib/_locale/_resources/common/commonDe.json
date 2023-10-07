@@ -21,5 +21,10 @@
   "labelSwitchPlayer": "Spielerwechsel",
   "labelNextPlayer": "name ist am Zug",
   "playerOneKey": "Spieler 1",
-  "playerTwoKey": "Spieler 2"
+  "playerTwoKey": "Spieler 2",
+  "appTitleKey": "Play And Learn App",
+  "itemGames": "Spiele",
+  "itemMemory": "Memory",
+  "itemTicTacToe": "Tic Tac Toe",
+  "titleLandingPage": "Spielend Lernen"
 }
