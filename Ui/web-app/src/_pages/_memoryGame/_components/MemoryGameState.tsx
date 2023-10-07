@@ -1,6 +1,5 @@
 import { Grid } from "@mui/material";
 import React from "react";
-import "../_style/gameState.css";
 import { IMemoryPlayer } from "../_interfaces/IMemoryPlayer";
 
 interface IProps {

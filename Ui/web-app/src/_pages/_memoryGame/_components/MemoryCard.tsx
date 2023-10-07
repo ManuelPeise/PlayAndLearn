@@ -3,7 +3,6 @@ import { getFileSrcFromBase64 } from "src/_lib/_utils/GameConfigurationHandler";
 import { IMemoryCard } from "../_interfaces/IMemoryCard";
 import { Grid } from "@mui/material";
 import background from "../_backgrounds/memoryBackground.jpg";
-import "../_style/memoryCardGrid.css";
 
 interface IProps {
   card: IMemoryCard;

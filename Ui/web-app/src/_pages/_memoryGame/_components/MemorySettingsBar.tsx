@@ -1,12 +1,10 @@
 import { Grid, SelectChangeEvent } from "@mui/material";
 import React from "react";
 import { useTranslation } from "react-i18next";
-import InputComponentWrapper from "src/_components/_input/InputComponentWrapper";
 import InputDropdown from "src/_components/_input/InputDropDown";
 import { IMemorySettings } from "../_interfaces/IMemorySettings";
 import { UseApi } from "src/_hooks/useApi";
 import { IKeyValueItem } from "src/_lib/_intefaces/IKeyValueItem";
-import "../_style/memorySettingsBar.css";
 import InputButton from "src/_components/_input/InputButton";
 import PlayerConfigurationDialog from "./PlayerConfigurationDialog";
 import { IMemoryPlayer } from "../_interfaces/IMemoryPlayer";
@@ -166,54 +164,6 @@ const MemorySettingsBar: React.FC<IProps> = (props) => {
     return true;
   }, [settings.players, settings.selectedPlayerMode]);
 
-  const playerDropdownWidth = React.useMemo(() => {
-    const remPerChar = 0.6;
-
-    let width = 0;
-
-    playerItems.forEach((item) => {
-      const value = t(`memory:${item.value}`);
-      const currentWidth = value.length * remPerChar;
-      if (width < currentWidth) {
-        width = currentWidth;
-      }
-    });
-
-    return width;
-  }, [t, playerItems]);
-
-  const topicDropdownWidth = React.useMemo(() => {
-    const remPerChar = 0.6;
-
-    let width = 0;
-
-    topicItems.forEach((item) => {
-      const value = t(`memory:${item.value}`);
-      const currentWidth = value.length * remPerChar;
-      if (width < currentWidth) {
-        width = currentWidth;
-      }
-    });
-
-    return width;
-  }, [t, topicItems]);
-
-  const levelDropdownWidth = React.useMemo(() => {
-    const remPerChar = 0.6;
-
-    let width = 0;
-
-    levelItems.forEach((item) => {
-      const value = t(`memory:${item.value}`);
-      const currentWidth = value.length * remPerChar;
-      if (width < currentWidth) {
-        width = currentWidth;
-      }
-    });
-
-    return width;
-  }, [t, levelItems]);
-
   if (!settingsApi.dataIsBound) {
     return null;
   }
@@ -222,79 +172,54 @@ const MemorySettingsBar: React.FC<IProps> = (props) => {
     <Grid className="memory-settings-bar-container">
       {/* topic selection */}
       <Grid className="settings-bar-item">
-        <InputComponentWrapper
-          className="game-settings-bar-item-wrapper"
-          children={
-            <InputDropdown
-              minWidth={topicDropdownWidth}
-              selectedKey={settings.selectedTopic}
-              toolTip={topicLabel}
-              disabledItems={[0]}
-              items={topicItems}
-              handleChange={topicCallBack}
-            />
-          }
+        <InputDropdown
+          minWidth={6}
+          selectedKey={settings.selectedTopic}
+          toolTip={topicLabel}
+          disabledItems={[0]}
+          items={topicItems}
+          handleChange={topicCallBack}
         />
       </Grid>
       {/* player selection */}
       <Grid className="settings-bar-item">
-        <InputComponentWrapper
-          className="game-settings-bar-item-wrapper"
-          children={
-            <InputDropdown
-              minWidth={playerDropdownWidth}
-              selectedKey={settings.selectedPlayerMode}
-              toolTip={playerLabel}
-              disabledItems={[0]}
-              items={playerItems}
-              handleChange={playerCallBack}
-            />
-          }
+        <InputDropdown
+          minWidth={6}
+          selectedKey={settings.selectedPlayerMode}
+          toolTip={playerLabel}
+          disabledItems={[0]}
+          items={playerItems}
+          handleChange={playerCallBack}
         />
       </Grid>
       <Grid className="settings-bar-item">
-        <InputComponentWrapper
-          className="game-settings-bar-item-wrapper settings-bar-button"
-          children={
-            <InputButton
-              buttonType="button"
-              text={playerConfig}
-              variant="outlined"
-              readonly={playerConfigDisabled}
-              handleClick={handlePlayerDialogOpen}
-            />
-          }
+        <InputButton
+          buttonType="button"
+          text={playerConfig}
+          variant="outlined"
+          readonly={playerConfigDisabled}
+          handleClick={handlePlayerDialogOpen}
         />
       </Grid>
       {/* level selection */}
       <Grid className="settings-bar-item">
-        <InputComponentWrapper
-          className="game-settings-bar-item-wrapper"
-          children={
-            <InputDropdown
-              minWidth={levelDropdownWidth}
-              readOnly={levelSelectionDisabled}
-              selectedKey={settings.selectedLevel}
-              toolTip={skillLabel}
-              disabledItems={[0]}
-              items={levelItems}
-              handleChange={levelCallBack}
-            />
-          }
+        <InputDropdown
+          minWidth={6}
+          readOnly={levelSelectionDisabled}
+          selectedKey={settings.selectedLevel}
+          toolTip={skillLabel}
+          disabledItems={[0]}
+          items={levelItems}
+          handleChange={levelCallBack}
         />
       </Grid>
       <Grid className="settings-bar-item">
-        <InputComponentWrapper
-          className="game-settings-bar-item-wrapper settings-bar-button"
-          children={
-            <InputButton
-              buttonType="button"
-              text={startGame}
-              variant="outlined"
-              readonly={startGameDisabled}
-              handleClick={handleStartGame}
-            />
-          }
+        <InputButton
+          buttonType="button"
+          text={startGame}
+          variant="outlined"
+          readonly={startGameDisabled}
+          handleClick={handleStartGame}
         />
       </Grid>
       {/* {settings.players.length && ( */}

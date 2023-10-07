@@ -5,6 +5,7 @@ import Loadingindicator from "src/_components/_loading/LoadingIndicator";
 import MemoryPlayGround from "./_components/MemoryPlayGround";
 import { IMemorySettings } from "./_interfaces/IMemorySettings";
 import { useTranslation } from "react-i18next";
+import "./_style/memory-style.css";
 
 const MemoryGame: React.FC = () => {
   const [settings, setSettings] = React.useState<IMemorySettings>({

@@ -2,8 +2,8 @@
   "labelTopic": "Thema",
   "labelSkill": "Schwierigkeit",
   "labelPlayer": "Spieler",
-  "labelPlayerConfig": "Spielereinstellungen",
-  "labelStartGame": "Spiel Starten",
+  "labelPlayerConfig": "Spieler",
+  "labelStartGame": "Start",
   "labelOK": "OK",
   "labelSave": "Speichern",
   "labelCancel": "Abbrechen",
@@ -19,7 +19,7 @@
   "labelPlayerTwo": "2 Spieler",
   "labelGameResult": "Bravo, Du hast nur attemts Versuche gebraucht!",
   "labelSwitchPlayer": "Spielerwechsel",
-  "labelNextPlayer": "Nächster Spieler",
+  "labelNextPlayer": "name ist am Zug",
   "playerOneKey": "Spieler 1",
   "playerTwoKey": "Spieler 2"
 }
