@@ -25,5 +25,6 @@
   "appTitleKey": "Play And Learn App",
   "itemGames": "Games",
   "itemMemory": "Memory",
-  "itemTicTacToe": "Tic Tac Toe"
+  "itemTicTacToe": "Tic Tac Toe",
+  "titleLandingPage": "Play And Learn"
 }
