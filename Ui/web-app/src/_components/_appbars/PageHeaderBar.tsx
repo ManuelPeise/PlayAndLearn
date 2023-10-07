@@ -6,13 +6,37 @@ import { useInputDropdownProps } from "../_componentHooks/useInputDropdownProps"
 import InputDropdown from "../_input/InputDropDown";
 import { MenuRounded } from "@mui/icons-material";
 import SideMenu, { ISidemenuProps } from "../_menu/SideMenu";
+import { UseApi } from "src/_hooks/useApi";
+import { ISideMenu } from "../_menu/jsonInterfaces";
 
 interface IProps {
   pageTitle: string;
 }
 
+const controller = `${process.env.REACT_APP_API_URL}SideMenu/`;
+
 const PageHeader: React.FC<IProps> = (props) => {
   const { pageTitle } = props;
+  const [isLoading, setIsLoading] = React.useState<boolean>(false);
+
+  const handleIsLoading = React.useCallback((isLoading: boolean) => {
+    setIsLoading(isLoading);
+  }, []);
+
+  const { publicMenuApi } = {
+    publicMenuApi: UseApi<ISideMenu>(
+      handleIsLoading,
+      `${controller}GetPublicMenu`,
+      "",
+      {
+        method: "GET",
+        mode: "cors",
+        headers: {
+          "content-type": `application/json`,
+        },
+      }
+    ),
+  };
 
   const [menu, setMenu] = React.useState<ISidemenuProps>({
     anchor: "left",
@@ -63,6 +87,7 @@ const PageHeader: React.FC<IProps> = (props) => {
           size="large"
           edge="start"
           color="inherit"
+          disabled={isLoading}
           aria-label="app_menu"
           onClick={(e) => toggleMenue(e, true)}
           sx={{ mr: 2 }}
@@ -79,7 +104,11 @@ const PageHeader: React.FC<IProps> = (props) => {
         </Typography>
         <InputDropdown {...inputDropdownProps} minWidth={-5} />
       </Toolbar>
-      <SideMenu menu={menu} toggleMenu={toggleMenue} />
+      <SideMenu
+        menu={menu}
+        menuData={publicMenuApi.response ?? ({} as ISideMenu)}
+        toggleMenu={toggleMenue}
+      />
     </AppBar>
   );
 };

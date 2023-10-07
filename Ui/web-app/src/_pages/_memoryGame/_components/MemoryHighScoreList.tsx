@@ -160,9 +160,9 @@ const MemoryHighScoreList: React.FC<IProps> = (props) => {
           </TableRow>
         </TableHead>
         <TableBody>
-          {selectedList?.map((item) => {
+          {selectedList?.map((item, key) => {
             return (
-              <TableRow>
+              <TableRow key={key}>
                 <TableCell>
                   <FormLabel className="high-score-table-entry">
                     {item.name}
