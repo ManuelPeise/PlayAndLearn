@@ -9,10 +9,5 @@ export interface ISideMenuHeader {
 
 export interface ISideMenuItem {
   title: string;
-  items: ISideSubMenuItem[];
-}
-
-export interface ISideSubMenuItem {
-  title: string;
   route: string;
 }
