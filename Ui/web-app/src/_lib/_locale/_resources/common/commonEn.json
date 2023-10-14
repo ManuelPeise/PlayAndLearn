@@ -19,7 +19,13 @@
   "labelPlayerTwo": "2 Player",
   "labelGameResult": "Bravo, you just needed a attemts tries!",
   "labelSwitchPlayer": "Change Player",
-  "labelNextPlayer": "Next Player",
+  "labelNextPlayer": "name's turn ",
   "playerOneKey": "Player 1",
-  "playerTwoKey": "Player 2"
+  "playerTwoKey": "Player 2",
+  "appTitleKey": "Play And Learn App",
+  "itemGames": "Games",
+  "itemMemory": "Memory",
+  "itemTicTacToe": "Tic Tac Toe",
+  "titleLandingPage": "Play And Learn",
+  "titleGames": "Games"
 }

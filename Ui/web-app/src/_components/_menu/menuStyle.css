@@ -1,0 +1,51 @@
+.menu-drawer {
+  background-color: transparent !important;
+  padding: 0;
+}
+
+.menu-list {
+  width: auto;
+  color: lightgray;
+  padding: 0 !important;
+}
+
+.menu-header-list-item {
+  background-color: blue;
+  padding: 0;
+}
+
+.menu-header-title {
+  color: White;
+  font-size: 2rem !important;
+  font-weight: bold;
+}
+
+.side-menu-item {
+  width: 100%;
+}
+
+.side-menu-item:hover {
+  opacity: 1;
+}
+
+.side-menu-item-text {
+  font-size: 1.3rem;
+  text-decoration: none;
+}
+
+.menu-icon {
+  color: wheat;
+}
+
+.close-icon {
+  opacity: 0.6;
+  width: 1.5rem !important;
+  height: 1.5rem !important;
+}
+
+.close-icon :hover {
+  cursor: pointer;
+  color: red !important;
+
+  opacity: 1;
+}
