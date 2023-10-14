@@ -1,0 +1,38 @@
+.tic-tac-toe-dialog {
+  width: 100%;
+}
+
+.tic-tac-toe-dialog-title {
+  display: flex;
+  justify-content: center;
+  background-color: blue;
+  color: white;
+}
+
+.tic-tac-toe-dialog-content {
+  display: flex;
+}
+
+@media (max-width: 1024px) {
+}
+
+@media (max-width: 1200px) {
+}
+
+@media (min-width: 1201px) {
+  .tic-tac-toe-dialog {
+    width: auto;
+  }
+
+  .tic-tac-toe-dialog-title {
+    display: flex;
+  }
+
+  .tic-tac-toe-dialog-content-item {
+    padding: 1rem;
+  }
+
+  .tic-tac-toe-dialog-action {
+    margin: 0.5rem 2rem 1.5rem 1rem;
+  }
+}

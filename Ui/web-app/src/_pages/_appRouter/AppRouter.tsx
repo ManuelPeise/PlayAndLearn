@@ -5,6 +5,7 @@ import PublicRoute from "./PublicRoute";
 import MemoryGame from "../_memoryGame/MemoryGame";
 import TicTacToeGame from "../_ticTacToeGame/TicTacToeGame";
 import LandingPage from "../_landingPage/LandingPage";
+import GamesPage from "../_gamePage/GamesPage";
 
 const AppRouter: React.FC = () => {
   return (
@@ -12,11 +13,15 @@ const AppRouter: React.FC = () => {
       <Routes>
         <Route path="/" element={<PublicRoute component={<LandingPage />} />} />
         <Route
-          path="/memory"
+          path="/games"
+          element={<PublicRoute component={<GamesPage />} />}
+        />
+        <Route
+          path="/games/memory"
           element={<PublicRoute component={<MemoryGame />} />}
         />
         <Route
-          path="/tictactoe"
+          path="/games/tictactoe"
           element={<PublicRoute component={<TicTacToeGame />} />}
         />
       </Routes>
