@@ -31,7 +31,7 @@ const MemoryLoadingIndicator: React.FC<IProps> = (props) => {
       }}
       container
     >
-      <FormLabel style={{ fontSize: "2rem" }}>{loadingIndicatorText}</FormLabel>
+      <FormLabel className="">{loadingIndicatorText}</FormLabel>
     </Grid>
   );
 };

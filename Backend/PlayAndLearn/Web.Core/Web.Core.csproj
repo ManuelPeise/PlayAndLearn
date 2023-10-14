@@ -31,11 +31,13 @@
     <ProjectReference Include="..\BusinessLogic.Administration\BusinessLogic.Administration.csproj" />
     <ProjectReference Include="..\BusinessLogic.Games\BusinessLogic.Games.csproj" />
     <ProjectReference Include="..\BusinessLogic.Import\BusinessLogic.Import.csproj" />
+    <ProjectReference Include="..\BusinessLogic.Infrastructure\BusinessLogic.Infrastructure.csproj" />
     <ProjectReference Include="..\BusinessLogic.Shared\BusinessLogic.Shared.csproj" />
     <ProjectReference Include="..\Data.AppData\Data.AppData.csproj" />
     <ProjectReference Include="..\Service.Administration\Service.Administration.csproj" />
     <ProjectReference Include="..\Service.Availability\Service.Availability.csproj" />
     <ProjectReference Include="..\Service.Import\Service.Import.csproj" />
+    <ProjectReference Include="..\Service.Infrastructure\Service.Infrastructure.csproj" />
     <ProjectReference Include="..\Services.Games\Services.Games.csproj" />
   </ItemGroup>
 

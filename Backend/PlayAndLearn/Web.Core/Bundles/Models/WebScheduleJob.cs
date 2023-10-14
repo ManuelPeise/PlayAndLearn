@@ -1,7 +1,4 @@
-﻿using BusinessLogic.Shared;
-using BusinessLogic.Shared.Interfaces;
-using Quartz;
-using System.Diagnostics;
+﻿using Quartz;
 
 namespace Web.Core.Bundles.Models
 {
@@ -20,8 +17,6 @@ namespace Web.Core.Bundles.Models
                     var response = await client.GetAsync(RequestUri);
 
                     response.EnsureSuccessStatusCode();
-
-                    Debug.WriteLine(response.StatusCode);
                 }
 
             }

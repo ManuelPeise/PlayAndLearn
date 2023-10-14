@@ -12,7 +12,6 @@ import {
 } from "@mui/material";
 import React from "react";
 import { useTranslation } from "react-i18next";
-import "../_style/memoryhighscoreList.css";
 import { UseApi } from "src/_hooks/useApi";
 import { IMemoryHighScoreListItem } from "../_interfaces/IMemoryHighScore";
 import { IKeyValueItem } from "src/_lib/_intefaces/IKeyValueItem";
@@ -92,16 +91,7 @@ const MemoryHighScoreList: React.FC<IProps> = (props) => {
 
         if (index < 8) {
           for (let i = 0; i < element.score; i++) {
-            stars.push(
-              <StarRate
-                key={i}
-                style={{
-                  width: "2.5rem",
-                  height: "2.5rem",
-                  color: "yellow",
-                }}
-              />
-            );
+            stars.push(<StarRate key={i} className="high-score-star" />);
           }
           items.push({
             name: element.name,
@@ -122,14 +112,12 @@ const MemoryHighScoreList: React.FC<IProps> = (props) => {
   }
 
   return (
-    <TableContainer>
+    <TableContainer className="table-container">
       <Table>
         <TableHead>
           <TableRow>
             <TableCell>
-              <FormLabel style={{ fontSize: "2rem", fontWeight: "bold" }}>
-                {title}
-              </FormLabel>
+              <FormLabel className="high-score-list-title">{title}</FormLabel>
             </TableCell>
             <TableCell></TableCell>
             <TableCell>
@@ -155,33 +143,33 @@ const MemoryHighScoreList: React.FC<IProps> = (props) => {
           </TableRow>
           <TableRow>
             <TableCell>
-              <FormLabel style={{ fontSize: "1rem", fontWeight: "bold" }}>
+              <FormLabel className="high-score-list-table-header">
                 {labelPlayer}
               </FormLabel>
             </TableCell>
             <TableCell>
-              <FormLabel style={{ fontSize: "1rem", fontWeight: "bold" }}>
+              <FormLabel className="high-score-list-table-header">
                 {labelAttemts}
               </FormLabel>
             </TableCell>
             <TableCell>
-              <FormLabel style={{ fontSize: "1rem", fontWeight: "bold" }}>
+              <FormLabel className="high-score-list-table-header">
                 {labelRating}
               </FormLabel>
             </TableCell>
           </TableRow>
         </TableHead>
         <TableBody>
-          {selectedList?.map((item) => {
+          {selectedList?.map((item, key) => {
             return (
-              <TableRow>
+              <TableRow key={key}>
                 <TableCell>
-                  <FormLabel style={{ fontSize: "1rem", fontWeight: "bold" }}>
+                  <FormLabel className="high-score-table-entry">
                     {item.name}
                   </FormLabel>
                 </TableCell>
                 <TableCell>
-                  <FormLabel style={{ fontSize: "1rem", fontWeight: "bold" }}>
+                  <FormLabel className="high-score-table-entry">
                     {item.attemts}
                   </FormLabel>
                 </TableCell>
@@ -196,27 +184,6 @@ const MemoryHighScoreList: React.FC<IProps> = (props) => {
         </TableBody>
       </Table>
     </TableContainer>
-    // <Grid container justifyContent="center" style={{ marginTop: "1rem" }}>
-    //   <Grid item xs={7} style={{ display: "flex", justifyContent: "center" }}>
-    //     <FormLabel style={{ fontSize: "2rem", fontWeight: "bold" }}>
-    //       {title}
-    //     </FormLabel>
-    //   </Grid>
-    //   <Grid item xs={3}>
-    //     <InputDropdown
-    //       fullWidth={true}
-    //       items={items}
-    //       disabledItems={[0]}
-    //       selectedKey={selected}
-    //       handleChange={handleOnChange}
-    //     />
-    //   </Grid>
-    //   <Grid container style={{ display: "flex", justifyContent: "center" }}>
-    //     {selectedList?.list?.map((item, index) => {
-    //       return <MemoryHighScoreListItem key={index} item={item} />;
-    //     })}
-    //   </Grid>
-    // </Grid>
   );
 };
 

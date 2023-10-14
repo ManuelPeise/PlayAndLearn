@@ -1,0 +1,156 @@
+.tic-tac-toe-page-container {
+  width: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+/* field */
+
+.tictactoe-field {
+  border: 2px solid lightgray;
+}
+
+.field-disabled {
+  pointer-events: none;
+  cursor: not-allowed;
+}
+
+/* small screens */
+@media (max-width: 1024px) {
+  /* settings bar */
+  .tic-tac-toe-settings-bar {
+    width: 100%;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    grid-gap: 8px;
+    border: 2px solid lightblue;
+    border-radius: 16px;
+  }
+
+  .tic-tac-toe-settings-bar-item {
+    display: flex;
+    justify-content: center;
+    align-content: center;
+    padding: 16px;
+  }
+
+  /* Board */
+  .tic-tac-toe-board {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+  }
+  /* fields */
+  .tictactoe-field {
+    min-width: 5rem !important;
+    width: 5rem !important;
+    min-height: 5rem !important;
+    height: 5rem !important;
+  }
+
+  .field-disabled {
+    min-width: 5rem !important;
+    width: 5rem !important;
+    min-height: 5rem !important;
+    height: 5rem !important;
+    pointer-events: none;
+    cursor: not-allowed;
+  }
+}
+
+/* desktop */
+@media (max-width: 1200px) {
+  /* settings bar */
+  .tic-tac-toe-settings-bar {
+    width: 100%;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    grid-gap: 8px;
+    border: 2px solid lightblue;
+    border-radius: 16px;
+    margin-top: 2rem;
+  }
+
+  .tic-tac-toe-settings-bar-item {
+    display: flex;
+    justify-content: center;
+    align-content: center;
+    padding: 16px;
+  }
+  /* Board */
+  .tic-tac-toe-board {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    grid-gap: 8px;
+  }
+
+  /* fields */
+  .tictactoe-field {
+    min-width: 5rem;
+    width: 5rem;
+    min-height: 5rem;
+    height: 5rem;
+  }
+
+  .field-disabled {
+    min-width: 5rem;
+    width: 5rem;
+    min-height: 5rem;
+    height: 5rem;
+  }
+}
+
+/* large */
+@media (min-width: 1201px) {
+  /* settings bar */
+  .tic-tac-toe-settings-bar {
+    width: 100%;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr 1fr;
+    grid-gap: 8px;
+    border: 2px solid lightblue;
+    border-radius: 16px;
+    margin-top: 2rem;
+  }
+
+  .tic-tac-toe-settings-bar-item {
+    display: flex;
+    justify-content: center;
+    align-content: center;
+    padding: 16px;
+  }
+  /* Board */
+
+  .tic-tac-toe-board-container {
+    display: flex;
+    justify-content: center;
+  }
+
+  .tic-tac-toe-board {
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    margin-top: 3rem;
+  }
+
+  /* fields */
+  .tictactoe-field {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-content: center;
+    font-size: 3rem;
+    width: 10rem;
+    height: 10rem;
+    cursor: pointer;
+  }
+
+  .tictactoe-field-disabled {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    align-content: center;
+    font-size: 3rem;
+    width: 10rem;
+    height: 10rem;
+    cursor: not-allowed;
+  }
+}

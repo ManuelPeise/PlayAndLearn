@@ -1,4 +1,4 @@
-import { FormLabel, Grid } from "@mui/material";
+import { FormLabel, Container, Grid } from "@mui/material";
 import React from "react";
 import { IMemorySettings } from "../_interfaces/IMemorySettings";
 import MemoryGameState from "./MemoryGameState";
@@ -11,8 +11,8 @@ import MemorySwitchPlayerDialog from "./MemorySwitchPlayerDialog";
 import MemorySinglePlayerResultDialog from "./MemorySinglePlayerResultDialog";
 import MemoryHighScoreList from "./MemoryHighScoreList";
 import MemoryGameUploadDialog from "./MemoryGameUploadDialog";
-import "../_style/memory-base.css";
 import { useTranslation } from "react-i18next";
+
 interface IProps {
   settings: IMemorySettings;
   handleSettingsChanged: (settings: Partial<IMemorySettings>) => void;
@@ -63,7 +63,7 @@ const MemoryPlayGround: React.FC<IProps> = (props) => {
   }, [t]);
 
   return (
-    <Grid>
+    <Container>
       {!settings.isRunning && (
         <MemorySettingsBar
           settings={settings}
@@ -94,13 +94,13 @@ const MemoryPlayGround: React.FC<IProps> = (props) => {
         />
       )}
       {!settings.isRunning && (
-        <Grid className="form-link-container" container>
+        <Grid className="create-game-link-container" container>
           <FormLabel
-            className="form-link-description-text"
+            className="create-game-link-description-text"
             onClick={handleShowMemoryUploadDialog}
           >
             {labelAddGameDescription}
-            <span className="form-link">{linkAddGame}</span>
+            <span>{linkAddGame}</span>
           </FormLabel>
         </Grid>
       )}
@@ -132,7 +132,7 @@ const MemoryPlayGround: React.FC<IProps> = (props) => {
           handleClose={handleHideMemoryUploadDialog}
         />
       )}
-    </Grid>
+    </Container>
   );
 };
 
