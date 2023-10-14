@@ -34,7 +34,9 @@ const SideMenu: React.FC<IProps> = (props) => {
         <List className="menu-list">
           <SideMenuHeader data={menuData.menuHeader} toggleMenu={toggleMenu} />
           {menuData?.items?.map((item, key) => {
-            return <SideMenuItem key={key} item={item} />;
+            return (
+              <SideMenuItem key={key} item={item} toggleMenu={toggleMenu} />
+            );
           })}
         </List>
       </Box>

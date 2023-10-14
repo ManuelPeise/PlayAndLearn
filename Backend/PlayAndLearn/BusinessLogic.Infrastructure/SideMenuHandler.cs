@@ -23,19 +23,7 @@ namespace BusinessLogic.Infrastructure
                     new SideMenuItem
                     {
                         Title = MenuItemKeys.MenuItemGamesKey,
-                        Items = new List<SideSubMenuItem>
-                        {
-                            new SideSubMenuItem
-                            {
-                                Title = MenuItemKeys.MenuMemoryKey,
-                                Route = "/memory"
-                            },
-                            new SideSubMenuItem
-                            {
-                                Title = MenuItemKeys.MenuTicTacToeKey,
-                                Route = "/tictactoe"
-                            }
-                        }
+                        Route = "/games"
                     }
                 }
             };
