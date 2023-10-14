@@ -2,6 +2,8 @@ import React from "react";
 import PageLayout from "../PageLayout";
 import { Grid } from "@mui/material";
 import { useTranslation } from "react-i18next";
+import LandingPageContainer from "./_components/LandingPageContainer";
+import "./_style/landingPage.css";
 
 const LandingPage: React.FC = () => {
   const { t } = useTranslation();
@@ -14,7 +16,9 @@ const LandingPage: React.FC = () => {
     <PageLayout
       pageTitle={pageTitle}
       pageBody={
-        <Grid style={{ display: "flex", justifyContent: "center" }}></Grid>
+        <Grid className="landing-page">
+          <LandingPageContainer />
+        </Grid>
       }
     />
   );

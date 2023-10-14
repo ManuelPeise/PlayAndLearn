@@ -12,12 +12,12 @@ export const supportedLanguages = {
   de: {
     common: commonDe,
     memory: memoryDe,
-    ticTacToe: ticTacToeDe,
+    tictactoe: ticTacToeDe,
   },
   en: {
     common: commonEn,
     memory: memoryEn,
-    ticTacToe: ticTacToeEn,
+    tictactoe: ticTacToeEn,
   },
 };
 

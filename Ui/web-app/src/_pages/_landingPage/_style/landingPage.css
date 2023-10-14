@@ -1,0 +1,16 @@
+.landing-page {
+  width: 100vw;
+  display: flex;
+  justify-content: center;
+}
+
+.landing-page-container {
+  display: flex;
+  justify-content: center;
+  padding: 5rem;
+}
+
+.landing-page-container img {
+  width: auto;
+  height: auto;
+}

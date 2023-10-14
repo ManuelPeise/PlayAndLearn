@@ -1,0 +1,26 @@
+.game-list-item {
+  padding: 0.5rem;
+}
+
+.game-list-item:hover {
+  cursor: pointer;
+}
+
+.game-list-item-link {
+  text-decoration: none;
+  display: flex;
+  flex-wrap: wrap;
+  flex-direction: row;
+  align-items: center;
+  color: gray;
+  font-size: 5rem !important;
+}
+
+.game-list-item-avatar {
+  width: 5rem !important;
+  height: 5rem !important;
+}
+
+.game-list-item-text {
+  margin-left: 1rem;
+}

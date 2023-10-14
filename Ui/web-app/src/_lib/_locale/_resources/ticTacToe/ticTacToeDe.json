@@ -1,3 +1,14 @@
 {
-  "pageTitle": "Tic Tac Toe Spiel"
+  "pageTitle": "Tic Tac Toe Spiel",
+  "titlePlayerConfig": "Spieler Einstellungen",
+  "labelSinglePlayer": "1 Spieler",
+  "labelMultiPlayer": "2 Spieler",
+  "labelLevelEasy": "Leicht",
+  "labelLevelMedium": "Mittel",
+  "labelLevelHard": "Schwer",
+  "labelAiPlayer": "Ai - Spieler",
+  "labelCurrentPlayersTurn": "currentPlayer ist dran.",
+  "gameResultDialogTitle": "Spielende!",
+  "labelTie": "Unentschieden!",
+  "labelGameOver": "player hat gewonnen!"
 }
